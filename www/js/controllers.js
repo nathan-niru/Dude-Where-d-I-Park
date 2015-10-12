@@ -11,6 +11,10 @@ angular.module('starter.controllers', [])
             myOptions);
 })
 
+.controller('ParkingCtrl', function($scope) {
+
+})
+
 .controller('DashCtrl', function($scope) {})
 
 .controller('ChatsCtrl', function($scope, Chats) {
