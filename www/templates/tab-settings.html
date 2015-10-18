@@ -1,0 +1,48 @@
+<ion-view view-title="Settings">
+  <ion-content class="padding" ng-controller="SettingsCtrl">
+    <ul class="list">
+
+      <label class="item item-input item-label">
+        <span class="input-label">Default Search Radius</span>
+        <input type="number" ng-model="defaultRadius" ng-change="updateRadius()">
+      </label>
+
+      <label class="item item-input item-label">
+        <span class="input-label">Default Notification Time (minutes before parking expires)</span>
+        <input type="number" ng-model="defaultTime">
+      </label>
+
+<!--       <label class="item item-input item-select">
+        <div class="input-label">
+          Age
+        </div>
+        <select>
+          <option selected>Under 65</option>
+          <option>65-74</option>
+          <option>75+</option>
+        </select>
+      </label> -->
+
+      <li class="item item-toggle">
+         Vibrate on notification
+         <label class="toggle toggle-positive">
+           <input type="checkbox" value="on">
+           <div class="track">
+             <div class="handle"></div>
+           </div>
+         </label>
+      </li>
+
+      <li class="item item-toggle">
+         Play sound on notificaton
+         <label class="toggle toggle-positive">
+           <input type="checkbox" value="on">
+           <div class="track">
+             <div class="handle"></div>
+           </div>
+         </label>
+      </li>
+
+    </ul>
+  </ion-content>
+</ion-view>

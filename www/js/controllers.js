@@ -37,6 +37,24 @@ angular.module('starter.controllers', [])
 
 })
 
+.controller('SettingsCtrl', function($scope, $localstorage) {
+  console.log("lol")
+
+  $scope.defaultRadius = Number($localstorage.get('defaultRadius'));
+  if (isNaN($scope.defaultRadius)) {
+    $scope.defaultRadius = 50;
+  }
+
+  $scope.defaultTime = 15;
+
+  $scope.updateRadius = function() {
+    $localstorage.set('defaultRadius', $scope.defaultRadius);
+    console.log("Setting default radius to " + $localstorage.get('defaultRadius'));
+  };
+
+  console.log($localstorage.get('defaultRadius'));
+})
+
 .controller('DashCtrl', function($scope) {})
 
 .controller('ChatsCtrl', function($scope, Chats) {
