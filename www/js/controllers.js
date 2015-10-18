@@ -7,8 +7,8 @@ angular.module('starter.controllers', [])
         center: latlng,
         mapTypeId: google.maps.MapTypeId.ROADMAP
     };
-    var map = new google.maps.Map(document.getElementById("map-div"),
-        myOptions);
+    var mapDiv = document.getElementById("map-div");
+    var map = new google.maps.Map(mapDiv, myOptions);
     navigator.geolocation.getCurrentPosition(function(position) {
       var pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
       map.setCenter(pos);
@@ -19,11 +19,30 @@ angular.module('starter.controllers', [])
       url: 'data.json',
       responseType: 'json'
     }).then(function successCallback(response) {
+      var infoDiv = document.getElementById("info-div");
+      var infoText = document.getElementById("info-text");
+
+      map.addListener('click', function() {
+        infoDiv.style.width = 0;
+        infoDiv.style.display = "none";
+        mapDiv.style.width = "100%";
+      });
+
+      var clickListener = function(data) {
+        mapDiv.style.width = "76%";
+        infoText.innerHTML = data;
+        infoDiv.style.width = "24%";
+        infoDiv.style.display = "block";
+      }
+
+      //console.log(response.data);
       var markers = response.data.map(function(data) {
-        var latLng = data.Point.coordinates.split(",");        
-        return new google.maps.Marker({
+        var latLng = data.Point.coordinates.split(",");
+        var marker = new google.maps.Marker({
           position: {lng: parseFloat(latLng[0]), lat: parseFloat(latLng[1])}
         });
+        marker.addListener('click', clickListener.bind(this, data.description));
+        return marker;
       });
 
       var mc = new MarkerClusterer(map, markers);
