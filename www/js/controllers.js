@@ -45,7 +45,8 @@ angular.module('starter.controllers', [])
         return marker;
       });
 
-      var mc = new MarkerClusterer(map, markers);
+      var mcOptions = {gridSize: 50, maxZoom: 20};
+      var mc = new MarkerClusterer(map, markers, mcOptions);
     }, function errorCallback(response) {
       // called asynchronously if an error occurs
       // or server returns response with an error status.
