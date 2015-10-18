@@ -1,14 +1,31 @@
 angular.module('starter.controllers', [])
 
 .controller('MapCtrl', function($scope) {
-    var latlng = new google.maps.LatLng(-34.397, 150.644);
+    var latlng = new google.maps.LatLng(49.261, -123.246);
     var myOptions = {
         zoom: 8,
         center: latlng,
         mapTypeId: google.maps.MapTypeId.ROADMAP
     };
     var map = new google.maps.Map(document.getElementById("map-div"),
-            myOptions);
+        myOptions);
+    navigator.geolocation.getCurrentPosition(function(position) {
+      var pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+      map.setCenter(pos);
+    });
+
+    var markerClustererOptions = new MarkerClusterer(map);
+
+    var kmlOptions = {
+      suppressInfoWindows: false,
+      preserveViewport: false,
+      map: map
+    };
+    var kmlLayer = new google.maps.KmlLayer(
+      "http://dudewheredipark.parseapp.com/parking_meter_rates_and_time_limits_small.kml",
+      kmlOptions
+    );
+    console.log(kmlLayer);
 })
 
 .controller('DashCtrl', function($scope) {})
