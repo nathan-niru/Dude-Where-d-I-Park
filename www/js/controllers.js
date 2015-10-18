@@ -28,6 +28,10 @@ angular.module('starter.controllers', [])
     console.log(kmlLayer);
 })
 
+.controller('ParkingCtrl', function($scope) {
+
+})
+
 .controller('DashCtrl', function($scope) {})
 
 .controller('ChatsCtrl', function($scope, Chats) {
