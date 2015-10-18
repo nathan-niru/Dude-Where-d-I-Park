@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-.controller('MapCtrl', function($scope) {
+.controller('MapCtrl', function($scope, $http) {
     var latlng = new google.maps.LatLng(49.261, -123.246);
     var myOptions = {
         zoom: 8,
@@ -14,18 +14,23 @@ angular.module('starter.controllers', [])
       map.setCenter(pos);
     });
 
-    var markerClustererOptions = new MarkerClusterer(map);
+    $http({
+      method: 'GET',
+      url: 'data.json',
+      responseType: 'json'
+    }).then(function successCallback(response) {
+      var markers = response.data.map(function(data) {
+        var latLng = data.Point.coordinates.split(",");        
+        return new google.maps.Marker({
+          position: {lng: parseFloat(latLng[0]), lat: parseFloat(latLng[1])}
+        });
+      });
 
-    var kmlOptions = {
-      suppressInfoWindows: false,
-      preserveViewport: false,
-      map: map
-    };
-    var kmlLayer = new google.maps.KmlLayer(
-      "http://dudewheredipark.parseapp.com/parking_meter_rates_and_time_limits_small.kml",
-      kmlOptions
-    );
-    console.log(kmlLayer);
+      var mc = new MarkerClusterer(map, markers);
+    }, function errorCallback(response) {
+      // called asynchronously if an error occurs
+      // or server returns response with an error status.
+    });
 })
 
 .controller('ParkingCtrl', function($scope) {
