@@ -21,6 +21,11 @@ angular.module('starter.controllers', [])
     }).then(function successCallback(response) {
       var infoDiv = document.getElementById("info-div");
       var infoText = document.getElementById("info-text");
+      var parkingIDInput = document.getElementById("parking-id");
+      var selectButton = document.getElementById("select-button");
+      var cancelButton = document.getElementById("cancel-button");
+
+      var currentParking = undefined;
 
       map.addListener('click', function() {
         infoDiv.style.width = 0;
@@ -28,11 +33,37 @@ angular.module('starter.controllers', [])
         mapDiv.style.width = "100%";
       });
 
+      selectButton.addEventListener('click', function() {
+        window.localStorage.setItem("savedParking", JSON.stringify(currentParking));
+        selectButton.style.display = "none";
+        cancelButton.style.display = "inline-block";
+      });
+
+      cancelButton.addEventListener('click', function() {
+        window.localStorage.clear();
+        cancelButton.style.display = "none";
+        selectButton.style.display = "inline-block";
+      });
+
       var clickListener = function(data) {
         mapDiv.style.width = "76%";
-        infoText.innerHTML = data;
+
+        infoText.innerHTML = data.description;
+        var savedParkingString = window.localStorage.getItem("savedParking");
+        if (savedParkingString) {
+          var savedParking = JSON.parse(savedParkingString);
+          if (data.id === savedParking.id) {
+            selectButton.style.display = "none";
+            cancelButton.style.display = "inline-block";
+          } else {
+            cancelButton.style.display = "none";
+            selectButton.style.display = "inline-block";
+          }
+        }
+
         infoDiv.style.width = "24%";
         infoDiv.style.display = "block";
+        currentParking = data;
       }
 
       //console.log(response.data);
@@ -41,7 +72,7 @@ angular.module('starter.controllers', [])
         var marker = new google.maps.Marker({
           position: {lng: parseFloat(latLng[0]), lat: parseFloat(latLng[1])}
         });
-        marker.addListener('click', clickListener.bind(this, data.description));
+        marker.addListener('click', clickListener.bind(this, data));
         return marker;
       });
 
