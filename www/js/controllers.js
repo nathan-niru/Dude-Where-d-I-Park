@@ -27,19 +27,19 @@ angular.module('starter.controllers', [])
 
       var currentParking = undefined;
 
-      map.addListener('click', function() {
+      map.addListener('mousedown', function() {
         infoDiv.style.width = 0;
         infoDiv.style.display = "none";
         mapDiv.style.width = "100%";
       });
 
-      selectButton.addEventListener('click', function() {
+      selectButton.addEventListener('mousedown', function() {
         window.localStorage.setItem("savedParking", JSON.stringify(currentParking));
         selectButton.style.display = "none";
         cancelButton.style.display = "inline-block";
       });
 
-      cancelButton.addEventListener('click', function() {
+      cancelButton.addEventListener('mousedown', function() {
         window.localStorage.clear();
         cancelButton.style.display = "none";
         selectButton.style.display = "inline-block";
@@ -73,7 +73,7 @@ angular.module('starter.controllers', [])
         var marker = new google.maps.Marker({
           position: {lng: parseFloat(latLng[0]), lat: parseFloat(latLng[1])}
         });
-        marker.addListener('click', clickListener.bind(this, data));
+        marker.addListener('mousedown', clickListener.bind(this, data));
         return marker;
       });
 
