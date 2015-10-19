@@ -7,8 +7,8 @@ angular.module('starter.controllers', [])
         center: latlng,
         mapTypeId: google.maps.MapTypeId.ROADMAP
     };
-    var map = new google.maps.Map(document.getElementById("map-div"),
-        myOptions);
+    var mapDiv = document.getElementById("map-div");
+    var map = new google.maps.Map(mapDiv, myOptions);
     navigator.geolocation.getCurrentPosition(function(position) {
       var pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
       map.setCenter(pos);
@@ -19,14 +19,66 @@ angular.module('starter.controllers', [])
       url: 'data.json',
       responseType: 'json'
     }).then(function successCallback(response) {
-      var markers = response.data.map(function(data) {
-        var latLng = data.Point.coordinates.split(",");        
-        return new google.maps.Marker({
-          position: {lng: parseFloat(latLng[0]), lat: parseFloat(latLng[1])}
-        });
+      var infoDiv = document.getElementById("info-div");
+      var infoText = document.getElementById("info-text");
+      var parkingIDInput = document.getElementById("parking-id");
+      var selectButton = document.getElementById("select-button");
+      var cancelButton = document.getElementById("cancel-button");
+
+      var currentParking = undefined;
+
+      map.addListener('mousedown', function() {
+        infoDiv.style.width = 0;
+        infoDiv.style.display = "none";
+        mapDiv.style.width = "100%";
       });
 
-      var mc = new MarkerClusterer(map, markers);
+      selectButton.addEventListener('mousedown', function() {
+        window.localStorage.setItem("savedParking", JSON.stringify(currentParking));
+        selectButton.style.display = "none";
+        cancelButton.style.display = "inline-block";
+      });
+
+      cancelButton.addEventListener('mousedown', function() {
+        window.localStorage.clear();
+        cancelButton.style.display = "none";
+        selectButton.style.display = "inline-block";
+      });
+
+      var clickListener = function(data) {
+        mapDiv.style.width = "76%";
+
+        //TODO: parse description to display meaningful text
+        infoText.innerHTML = data.description;
+        var savedParkingString = window.localStorage.getItem("savedParking");
+        if (savedParkingString) {
+          var savedParking = JSON.parse(savedParkingString);
+          if (data.id === savedParking.id) {
+            selectButton.style.display = "none";
+            cancelButton.style.display = "inline-block";
+          } else {
+            cancelButton.style.display = "none";
+            selectButton.style.display = "inline-block";
+          }
+        }
+
+        infoDiv.style.width = "24%";
+        infoDiv.style.display = "block";
+        currentParking = data;
+      }
+
+      //console.log(response.data);
+      var markers = response.data.map(function(data) {
+        var latLng = data.Point.coordinates.split(",");
+        var marker = new google.maps.Marker({
+          position: {lng: parseFloat(latLng[0]), lat: parseFloat(latLng[1])}
+        });
+        marker.addListener('mousedown', clickListener.bind(this, data));
+        return marker;
+      });
+
+      var mcOptions = {gridSize: 50, maxZoom: 20};
+      var mc = new MarkerClusterer(map, markers, mcOptions);
     }, function errorCallback(response) {
       // called asynchronously if an error occurs
       // or server returns response with an error status.
@@ -38,46 +90,40 @@ angular.module('starter.controllers', [])
 })
 
 .controller('SettingsCtrl', function($scope, $localstorage) {
-  console.log("lol")
 
   $scope.defaultRadius = Number($localstorage.get('defaultRadius'));
   if (isNaN($scope.defaultRadius)) {
     $scope.defaultRadius = 50;
   }
-
-  $scope.defaultTime = 15;
-
   $scope.updateRadius = function() {
     $localstorage.set('defaultRadius', $scope.defaultRadius);
-    console.log("Setting default radius to " + $localstorage.get('defaultRadius'));
   };
 
-  console.log($localstorage.get('defaultRadius'));
-})
-
-.controller('DashCtrl', function($scope) {})
-
-.controller('ChatsCtrl', function($scope, Chats) {
-  // With the new view caching in Ionic, Controllers are only called
-  // when they are recreated or on app start, instead of every page change.
-  // To listen for when this page is active (for example, to refresh data),
-  // listen for the $ionicView.enter event:
-  //
-  //$scope.$on('$ionicView.enter', function(e) {
-  //});
-
-  $scope.chats = Chats.all();
-  $scope.remove = function(chat) {
-    Chats.remove(chat);
+  $scope.defaultTime = Number($localstorage.get('defaultTime'));
+    if (isNaN($scope.defaultTime)) {
+    $scope.defaultTime = 15;
+  }
+  $scope.updateTime = function() {
+    $localstorage.set('defaultTime', $scope.defaultTime);
   };
-})
 
-.controller('ChatDetailCtrl', function($scope, $stateParams, Chats) {
-  $scope.chat = Chats.get($stateParams.chatId);
-})
+  $scope.vibrate = $localstorage.get('vibrate');
+  if ($scope.vibrate == 'false') {
+    $scope.vibrate = false;
+  } else {
+    $scope.vibrate = true;
+  }
+  $scope.updateVibrate = function() {
+    $localstorage.set('vibrate', $scope.vibrate);
+  };
 
-.controller('AccountCtrl', function($scope) {
-  $scope.settings = {
-    enableFriends: true
+  $scope.sound = $localstorage.get('sound');
+  if ($scope.sound == 'false') {
+    $scope.sound = false;
+  } else {
+    $scope.sound = true;
+  }
+  $scope.updateSound = function() {
+    $localstorage.set('sound', $scope.sound);
   };
 });

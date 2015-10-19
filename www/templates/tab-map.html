@@ -1,8 +1,18 @@
 <ion-view view-title="Map">
   <ion-content class="padding">
     <div class="list card">
-      <div class="item item-divider">Map</div>
-      <div class="item item-body" id="map-div" style="height: 500px; width: 100%;">
+      <div class="item item-body" id="map-div" />
+    </div>
+    <div class="list card" id="info-div" style="display: none;">
+      <div id="info-text"></div>
+      <div id="info-buttons">
+        <input type="hidden" id="parking-id">
+        <button class="button button-positive" id="select-button">
+          Select
+        </button>
+        <button class="button button-assertive" id="cancel-button" style="display: none;">
+          Cancel
+        </button>
       </div>
     </div>
   </ion-content>
