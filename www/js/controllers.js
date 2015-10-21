@@ -1,9 +1,10 @@
 angular.module('starter.controllers', [])
 
-.controller('MapCtrl', function($scope, $http) {
-    var latlng = new google.maps.LatLng(49.261, -123.246);
+.controller('MapCtrl', function($scope, $http, Enum) {
+    //TODO: Separate the functionalities below into different components
+    var latlng = new google.maps.LatLng(Enum.DEFAULT_LAT, Enum.DEFAULT_LNG);
     var mapOptions = {
-        zoom: 12,
+        zoom: Enum.DEFAULT_MAP_ZOOM,
         center: latlng,
         mapTypeId: google.maps.MapTypeId.ROADMAP
     };
@@ -28,7 +29,7 @@ angular.module('starter.controllers', [])
     searchBox.addListener('places_changed', function() {
       var places = searchBox.getPlaces();
 
-      if (places.length == 0) {
+      if (places.length === 0) {
         return;
       }
 
@@ -64,7 +65,15 @@ angular.module('starter.controllers', [])
           bounds.extend(place.geometry.location);
         }
       });
-      map.fitBounds(bounds);
+
+      // If there's only one location then don't use fitBounds.
+      // Instead use setCenter and setZoom
+      if (searchMarkers.length === 1) {
+        map.setCenter(searchMarkers[0].position);
+        map.setZoom(Enum.DEFAULT_SEARCH_ZOOM);
+      } else {
+        map.fitBounds(bounds);
+      }
     });
 
     $http({
