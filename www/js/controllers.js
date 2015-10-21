@@ -2,13 +2,13 @@ angular.module('starter.controllers', [])
 
 .controller('MapCtrl', function($scope, $http) {
     var latlng = new google.maps.LatLng(49.261, -123.246);
-    var myOptions = {
-        zoom: 8,
+    var mapOptions = {
+        zoom: 12,
         center: latlng,
         mapTypeId: google.maps.MapTypeId.ROADMAP
     };
     var mapDiv = document.getElementById("map-div");
-    var map = new google.maps.Map(mapDiv, myOptions);
+    var map = new google.maps.Map(mapDiv, mapOptions);
     navigator.geolocation.getCurrentPosition(function(position) {
       var pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
       map.setCenter(pos);
