@@ -96,7 +96,7 @@ angular.module('starter.controllers', [])
         mapDiv.style.width = "100%";
       });
 
-      selectButton.addEventListener('mousedown', function() {
+      selectButton.addEventListener('click', function() {
         $localStorage.setObject('savedParking', currentParking);
         selectButton.style.display = "none";
         cancelButton.style.display = "inline-block";
@@ -111,7 +111,7 @@ angular.module('starter.controllers', [])
         }
       });
 
-      cancelButton.addEventListener('mousedown', function() {
+      cancelButton.addEventListener('click', function() {
         $localStorage.set('savedParking', undefined);
         cancelButton.style.display = "none";
         selectButton.style.display = "inline-block";
