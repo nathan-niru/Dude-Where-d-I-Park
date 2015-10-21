@@ -96,13 +96,13 @@ angular.module('starter.controllers', [])
       });
 
       selectButton.addEventListener('mousedown', function() {
-        $localStorage.setItem("savedParking", JSON.stringify(currentParking));
+        $localStorage.setObject('savedParking', currentParking);
         selectButton.style.display = "none";
         cancelButton.style.display = "inline-block";
       });
 
       cancelButton.addEventListener('mousedown', function() {
-        $localStorage.setItem("savedParking", undefined);
+        $localStorage.set('savedParking', undefined);
         cancelButton.style.display = "none";
         selectButton.style.display = "inline-block";
       });
@@ -112,9 +112,8 @@ angular.module('starter.controllers', [])
 
         //TODO: parse description to display meaningful text
         infoText.innerHTML = data.description;
-        var savedParkingString = $localStorage.getItem("savedParking");
-        if (savedParkingString) {
-          var savedParking = JSON.parse(savedParkingString);
+        var savedParking = $localStorage.getObject('savedParking');
+        if (savedParking) {
           if (data.id === savedParking.id) {
             selectButton.style.display = "none";
             cancelButton.style.display = "inline-block";

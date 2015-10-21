@@ -12,7 +12,7 @@ angular.module('starter.services', [])
       $window.localStorage[key] = JSON.stringify(value);
     },
     getObject: function(key) {
-      return JSON.parse($window.localStorage[key] || '{}');
+      return JSON.parse($window.localStorage[key] || undefined);
     }
   }
 }])
@@ -20,7 +20,7 @@ angular.module('starter.services', [])
 .factory('$appSettings', ['$localStorage', 'Enum', function($localStorage, Enum) {
   return {
     getSearchZoom: function() {
-      return Number($localStorage['searchZoom']) || Enum.DEFAULT_SEARCH_ZOOM;
+      return Number($localStorage.get('searchZoom')) || Enum.DEFAULT_SEARCH_ZOOM;
     }
   }
 }]);
