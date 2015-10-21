@@ -16,12 +16,13 @@ angular.module('starter.controllers', [])
     });
 
     // Create the search box and link it to the UI element.
-    var input = document.getElementById('pac-input');
-    var searchBox = new google.maps.places.SearchBox(input);
-    map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+    var searchInput = document.getElementById('pac-input');
+    var searchBox = new google.maps.places.SearchBox(searchInput);
+    map.controls[google.maps.ControlPosition.TOP_LEFT].push(searchInput);
 
     // Bias the SearchBox results towards current map's viewport.
     map.addListener('bounds_changed', function() {
+      searchInput.style.display = "block";
       searchBox.setBounds(map.getBounds());
     });
 
@@ -99,6 +100,15 @@ angular.module('starter.controllers', [])
         $localStorage.setObject('savedParking', currentParking);
         selectButton.style.display = "none";
         cancelButton.style.display = "inline-block";
+
+        // TODO: find a way to reuse updateParkingCard() in ParkingCtrl
+        var parkingCard = document.getElementById("parking-card");
+        if (parkingCard) {
+          var savedParking = $localStorage.getObject('savedParking');
+          if (savedParking) {
+            parkingCard.innerHTML = savedParking.description;
+          }
+        }
       });
 
       cancelButton.addEventListener('mousedown', function() {
@@ -146,8 +156,16 @@ angular.module('starter.controllers', [])
     });
 })
 
-.controller('ParkingCtrl', function($scope) {
+.controller('ParkingCtrl', function($localStorage) {
+  updateParkingCard = function() {
+    var parkingCard = document.getElementById("parking-card");
+    var savedParking = $localStorage.getObject('savedParking');
+    if (savedParking) {
+      parkingCard.innerHTML = savedParking.description;
+    }
+  }
 
+  updateParkingCard();
 })
 
 .controller('SettingsCtrl', function($scope, $localStorage, Enum) {
