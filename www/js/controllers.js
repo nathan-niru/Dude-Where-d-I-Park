@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-.controller('MapCtrl', function($scope, $http, Enum) {
+.controller('MapCtrl', function($scope, $http, $localStorage, $appSettings, Enum) {
     //TODO: Separate the functionalities below into different components
     var latlng = new google.maps.LatLng(Enum.DEFAULT_LAT, Enum.DEFAULT_LNG);
     var mapOptions = {
@@ -70,7 +70,7 @@ angular.module('starter.controllers', [])
       // Instead use setCenter and setZoom
       if (searchMarkers.length === 1) {
         map.setCenter(searchMarkers[0].position);
-        map.setZoom(Enum.DEFAULT_SEARCH_ZOOM);
+        map.setZoom($appSettings.getSearchZoom());
       } else {
         map.fitBounds(bounds);
       }
@@ -96,13 +96,13 @@ angular.module('starter.controllers', [])
       });
 
       selectButton.addEventListener('mousedown', function() {
-        window.localStorage.setItem("savedParking", JSON.stringify(currentParking));
+        $localStorage.setItem("savedParking", JSON.stringify(currentParking));
         selectButton.style.display = "none";
         cancelButton.style.display = "inline-block";
       });
 
       cancelButton.addEventListener('mousedown', function() {
-        window.localStorage.clear();
+        $localStorage.setItem("savedParking", undefined);
         cancelButton.style.display = "none";
         selectButton.style.display = "inline-block";
       });
@@ -112,7 +112,7 @@ angular.module('starter.controllers', [])
 
         //TODO: parse description to display meaningful text
         infoText.innerHTML = data.description;
-        var savedParkingString = window.localStorage.getItem("savedParking");
+        var savedParkingString = $localStorage.getItem("savedParking");
         if (savedParkingString) {
           var savedParking = JSON.parse(savedParkingString);
           if (data.id === savedParking.id) {
@@ -151,41 +151,42 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('SettingsCtrl', function($scope, $localstorage) {
-
-  $scope.defaultRadius = Number($localstorage.get('defaultRadius'));
-  if (isNaN($scope.defaultRadius)) {
-    $scope.defaultRadius = 50;
-  }
-  $scope.updateRadius = function() {
-    $localstorage.set('defaultRadius', $scope.defaultRadius);
+.controller('SettingsCtrl', function($scope, $localStorage, Enum) {
+  $scope.updateSearchZoom = function() {
+    $localStorage.set('searchZoom', $scope.searchZoom);
   };
 
-  $scope.defaultTime = Number($localstorage.get('defaultTime'));
+  $scope.searchZoom = Number($localStorage.get('searchZoom'));
+  if (isNaN($scope.searchZoom)) {
+    $scope.searchZoom = Enum.DEFAULT_SEARCH_ZOOM;
+    $scope.updateSearchZoom();
+  }
+
+  $scope.defaultTime = Number($localStorage.get('defaultTime'));
     if (isNaN($scope.defaultTime)) {
     $scope.defaultTime = 15;
   }
   $scope.updateTime = function() {
-    $localstorage.set('defaultTime', $scope.defaultTime);
+    $localStorage.set('defaultTime', $scope.defaultTime);
   };
 
-  $scope.vibrate = $localstorage.get('vibrate');
+  $scope.vibrate = $localStorage.get('vibrate');
   if ($scope.vibrate == 'false') {
     $scope.vibrate = false;
   } else {
     $scope.vibrate = true;
   }
   $scope.updateVibrate = function() {
-    $localstorage.set('vibrate', $scope.vibrate);
+    $localStorage.set('vibrate', $scope.vibrate);
   };
 
-  $scope.sound = $localstorage.get('sound');
+  $scope.sound = $localStorage.get('sound');
   if ($scope.sound == 'false') {
     $scope.sound = false;
   } else {
     $scope.sound = true;
   }
   $scope.updateSound = function() {
-    $localstorage.set('sound', $scope.sound);
+    $localStorage.set('sound', $scope.sound);
   };
 });

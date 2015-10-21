@@ -1,6 +1,6 @@
 angular.module('starter.services', [])
 
-.factory('$localstorage', ['$window', function($window) {
+.factory('$localStorage', ['$window', function($window) {
   return {
     set: function(key, value) {
       $window.localStorage[key] = value;
@@ -15,4 +15,13 @@ angular.module('starter.services', [])
       return JSON.parse($window.localStorage[key] || '{}');
     }
   }
+}])
+
+.factory('$appSettings', ['$localStorage', 'Enum', function($localStorage, Enum) {
+  return {
+    getSearchZoom: function() {
+      return Number($localStorage['searchZoom']) || Enum.DEFAULT_SEARCH_ZOOM;
+    }
+  }
 }]);
+
