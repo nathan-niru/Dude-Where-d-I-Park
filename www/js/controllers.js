@@ -188,8 +188,16 @@ angular.module('starter.controllers', [])
       var clickListener = function(data, marker) {
         mapDiv.style.width = "65%";
 
+        // If there's a <br> in the beginning of the description then get
+        // get rid of it since its taking up space
+        var descriptionHTML = data.description;
+        var breakLineString = "<br>";
+        if (data.description.slice(0, breakLineString.length) === breakLineString) {
+          descriptionHTML = data.description.slice(breakLineString.length);
+        }
+
         //TODO: parse description to display meaningful text
-        infoText.innerHTML = data.description;
+        infoText.innerHTML = descriptionHTML;
         var savedParking = $localStorage.getObject('savedParking');
         if (savedParking) {
           if (data.id === savedParking.id) {
