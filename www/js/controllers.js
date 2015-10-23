@@ -82,12 +82,12 @@ angular.module('starter.controllers', [])
       url: 'data.json',
       responseType: 'json'
     }).then(function successCallback(response) {
-      var infoDiv = document.getElementById("info-div");
+      var infoPanel = document.getElementById("info-panel");
       var infoText = document.getElementById("info-text");
-      var parkingIDInput = document.getElementById("parking-id");
       var selectButton = document.getElementById("select-button");
       var cancelButton = document.getElementById("cancel-button");
       var routeButton = document.getElementById("route-button");
+      var hideInfoPanelButton = document.getElementById("hide-info-panel-button");
       var directionsPanel = document.getElementById('directions-panel');
       var clearRouteButton = document.getElementById('clear-route-button');
 
@@ -96,7 +96,7 @@ angular.module('starter.controllers', [])
       var selectedParkingMeter = undefined;
 
       map.addListener('click', function() {
-        infoDiv.style.display = "none";
+        infoPanel.style.display = "none";
         directionsPanel.style.display = "none";
         mapDiv.style.width = "100%";
       });
@@ -169,7 +169,7 @@ angular.module('starter.controllers', [])
           directionsService.route(request, function(response, status) {
             if (status == google.maps.DirectionsStatus.OK) {
               directionsPanel.style.display = "block";
-              infoDiv.style.display = "none";
+              infoPanel.style.display = "none";
               // Display the route on the map.
               directionsDisplay.setDirections(response);
             } else {
@@ -178,6 +178,12 @@ angular.module('starter.controllers', [])
           });
         });
       });
+
+      hideInfoPanelButton.addEventListener('click', function() {
+        infoPanel.style.display = "none";
+        directionsPanel.style.display = "none";
+        mapDiv.style.width = "100%";
+      })
 
       var clickListener = function(data, marker) {
         mapDiv.style.width = "65%";
@@ -195,7 +201,7 @@ angular.module('starter.controllers', [])
           }
         }
 
-        infoDiv.style.display = "block";
+        infoPanel.style.display = "block";
         selectedParking = data;
         selectedParkingMarker = marker;
       }

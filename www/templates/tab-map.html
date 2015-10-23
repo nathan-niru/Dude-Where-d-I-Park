@@ -4,22 +4,29 @@
       <input id="pac-input" type="text" placeholder="Search..." style="display: none;">
       <div class="item item-body" id="map-div" />
     </div>
-    <div id="info-div" style="display: none;">
-      <div id="info-text"></div>
-      <div id="info-buttons">
-        <input type="hidden" id="parking-id">
-        <button class="button button-positive" id="select-button">
-          <i class="icon ion-checkmark-round button-icon"></i>
-          Select
-        </button>
-        <button class="button button-assertive" id="cancel-button" style="display: none;">
-          <i class="icon ion-close-round button-icon"></i>
-          Cancel
-        </button>
-        <button class="button button-positive" id="route-button">
-          <i class="icon ion-navigate button-icon"></i>
-          Route
-        </button>
+    <div id="info-panel" style="display: none;">
+      <div class="list card">
+        <div class="item item-body">
+          <div id="info-text"></div>
+        </div>
+        <div class="item tabs tabs-secondary tabs-icon-left" id="info-buttons">
+          <a class="tab-item" id="select-button">
+            <i class="icon ion-checkmark-round button-icon"></i>
+            Select
+          </a>
+          <a class="tab-item" id="cancel-button" style="display: none;">
+            <i class="icon ion-close-round button-icon"></i>
+            Cancel
+          </a>
+          <a class="tab-item" id="route-button">
+            <i class="icon ion-navigate button-icon"></i>
+            Route
+          </a>
+          <a class="tab-item" id="hide-info-panel-button">
+            <i class="icon ion-chevron-right button-icon"></i>
+            Hide
+          </a>
+        </div>
       </div>
     </div>
     <div id="directions-panel">

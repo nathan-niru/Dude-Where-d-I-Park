@@ -3,7 +3,7 @@
   width: 100%;
 }
 
-#info-div, #directions-panel {
+#info-panel, #directions-panel {
   height: 100%;
   top: -100%;
   float: right;
@@ -13,6 +13,15 @@
   line-height: 30px;
   position: relative;
   margin: 0;
+}
+
+#info-panel .card {
+  height: 100%;
+  margin: 0;
+}
+
+#info-panel .card .item-body {
+  border-width: 0;
 }
 
 #info-text {
@@ -35,7 +44,6 @@
 
 #info-buttons {
   text-align: center;
-  bottom: 40px;
   width: 100%;
   position: absolute;
 }
