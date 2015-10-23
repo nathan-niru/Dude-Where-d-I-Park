@@ -87,6 +87,7 @@ angular.module('starter.controllers', [])
       var parkingIDInput = document.getElementById("parking-id");
       var selectButton = document.getElementById("select-button");
       var cancelButton = document.getElementById("cancel-button");
+      var routeButton = document.getElementById("route-button");
 
       var currentParking = undefined;
 
@@ -117,6 +118,31 @@ angular.module('starter.controllers', [])
         selectButton.style.display = "inline-block";
       });
 
+      var directionsDisplay = new google.maps.DirectionsRenderer({
+        map: map
+      });
+      var directionsService = new google.maps.DirectionsService();
+      
+      routeButton.addEventListener('click', function() {
+        navigator.geolocation.getCurrentPosition(function(position) {
+          var pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+          var request = {
+            destination: currentParking.latLng,
+            origin: pos,
+            travelMode: google.maps.TravelMode.DRIVING
+          };
+
+          directionsService.route(request, function(response, status) {
+            if (status == google.maps.DirectionsStatus.OK) {
+              // Display the route on the map.
+              directionsDisplay.setDirections(response);
+            } else {
+              // TODO: Display error if we can't get response from directionService
+            }
+          });
+        });
+      });
+
       var clickListener = function(data) {
         mapDiv.style.width = "76%";
 
@@ -140,9 +166,10 @@ angular.module('starter.controllers', [])
 
       //console.log(response.data);
       var markers = response.data.map(function(data) {
-        var latLng = data.Point.coordinates.split(",");
+        var coordinates = data.Point.coordinates.split(",");
+        data.latLng = {lng: parseFloat(coordinates[0]), lat: parseFloat(coordinates[1])}
         var marker = new google.maps.Marker({
-          position: {lng: parseFloat(latLng[0]), lat: parseFloat(latLng[1])}
+          position: data.latLng
         });
         marker.addListener('mousedown', clickListener.bind(this, data));
         return marker;
