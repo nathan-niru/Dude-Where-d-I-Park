@@ -91,7 +91,9 @@ angular.module('starter.controllers', [])
       var directionsPanel = document.getElementById('directions-panel');
       var removeRouteButton = document.getElementById('remove-route-button');
 
-      var currentParking = undefined;
+      var savedParkingMarker = undefined;
+      var selectedParking = undefined;
+      var selectedParkingMeter = undefined;
 
       map.addListener('click', function() {
         infoDiv.style.display = "none";
@@ -99,8 +101,27 @@ angular.module('starter.controllers', [])
         mapDiv.style.width = "100%";
       });
 
+      // Change the marker icon to default and put marker into markerCluster
+      function deindividualizeMarker (marker, markerClusterer) {
+        marker.setMap(undefined);
+        marker.setIcon(undefined);
+        markerClusterer.addMarker(savedParkingMarker);
+      }
+
       selectButton.addEventListener('click', function() {
-        $localStorage.setObject('savedParking', currentParking);
+        $localStorage.setObject('savedParking', selectedParking);
+
+        // Make the saved marker stand out by changing the icon and
+        // removing it from markerCluster so it will always show on
+        // the map individually
+        if (savedParkingMarker) {
+          deindividualizeMarker(savedParkingMarker, $scope.markerClusterer);
+        }
+        savedParkingMarker = selectedParkingMarker;
+        $scope.markerClusterer.removeMarker(savedParkingMarker);
+        selectedParkingMarker.setIcon("resources/green-marker.png");
+        selectedParkingMarker.setMap(map);
+
         selectButton.style.display = "none";
         cancelButton.style.display = "inline-block";
 
@@ -116,6 +137,10 @@ angular.module('starter.controllers', [])
 
       cancelButton.addEventListener('click', function() {
         $localStorage.set('savedParking', undefined);
+
+        deindividualizeMarker(savedParkingMarker, $scope.markerClusterer);
+        savedParkingMarker = undefined;
+
         cancelButton.style.display = "none";
         selectButton.style.display = "inline-block";
       });
@@ -136,7 +161,7 @@ angular.module('starter.controllers', [])
         navigator.geolocation.getCurrentPosition(function(position) {
           var pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
           var request = {
-            destination: currentParking.latLng,
+            destination: selectedParking.latLng,
             origin: pos,
             travelMode: google.maps.TravelMode.DRIVING
           };
@@ -154,7 +179,7 @@ angular.module('starter.controllers', [])
         });
       });
 
-      var clickListener = function(data) {
+      var clickListener = function(data, marker) {
         mapDiv.style.width = "65%";
 
         //TODO: parse description to display meaningful text
@@ -171,7 +196,8 @@ angular.module('starter.controllers', [])
         }
 
         infoDiv.style.display = "block";
-        currentParking = data;
+        selectedParking = data;
+        selectedParkingMarker = marker;
       }
 
       //console.log(response.data);
@@ -181,12 +207,27 @@ angular.module('starter.controllers', [])
         var marker = new google.maps.Marker({
           position: data.latLng
         });
-        marker.addListener('mousedown', clickListener.bind(this, data));
+        // TODO: does this work if we change 'mousedown' to 'click'?
+        // If yes, we should change to 'click'.
+        marker.addListener('mousedown', clickListener.bind(this, data, marker));
+
+        // If the marker is the marker of the already selected parking, then
+        // show the accentuated marker instead
+        if ($localStorage.getObject('savedParking') &&
+          data.id === $localStorage.getObject('savedParking').id) {
+          savedParkingMarker = marker;
+        }
         return marker;
       });
 
+      if (savedParkingMarker) {
+        markers.splice(markers.indexOf(savedParkingMarker), 1);
+        savedParkingMarker.setIcon("resources/green-marker.png");
+        savedParkingMarker.setMap(map);
+      }
+    
       var mcOptions = {gridSize: 50, maxZoom: 20};
-      var mc = new MarkerClusterer(map, markers, mcOptions);
+      $scope.markerClusterer = new MarkerClusterer(map, markers, mcOptions);
     }, function errorCallback(response) {
       // called asynchronously if an error occurs
       // or server returns response with an error status.

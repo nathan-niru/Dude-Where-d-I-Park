@@ -9,6 +9,4 @@ angular.module('Enums', [])
   };
 
   return enumService;
-}]
-  
-);
+}]);
