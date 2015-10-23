@@ -22,6 +22,7 @@
 #directions-panel {
   padding-left: 10px;
   font-size: 12px;
+  overflow-x: hidden;
 }
 
 #directions-panel select, #directions-panel input {
@@ -56,8 +57,7 @@
   font-size: 16px;
 }
 
-#remove-route-button {
-  left: 26%;
+#clear-route-button {
   margin-top: 5px;
 }
 

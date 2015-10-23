@@ -89,7 +89,7 @@ angular.module('starter.controllers', [])
       var cancelButton = document.getElementById("cancel-button");
       var routeButton = document.getElementById("route-button");
       var directionsPanel = document.getElementById('directions-panel');
-      var removeRouteButton = document.getElementById('remove-route-button');
+      var clearRouteButton = document.getElementById('clear-route-button');
 
       var savedParkingMarker = undefined;
       var selectedParking = undefined;
@@ -145,7 +145,7 @@ angular.module('starter.controllers', [])
         selectButton.style.display = "inline-block";
       });
 
-      removeRouteButton.addEventListener('click', function() {
+      clearRouteButton.addEventListener('click', function() {
         directionsDisplay.setMap(undefined);
         directionsPanel.style.display = "none";
         mapDiv.style.width = "100%";
