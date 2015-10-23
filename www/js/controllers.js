@@ -127,12 +127,12 @@ angular.module('starter.controllers', [])
       })
 
       var directionsDisplay = new google.maps.DirectionsRenderer({
-        map: map,
         panel: directionsPanel
       });
       var directionsService = new google.maps.DirectionsService();
       
       routeButton.addEventListener('click', function() {
+        directionsDisplay.setMap(map);
         navigator.geolocation.getCurrentPosition(function(position) {
           var pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
           var request = {
