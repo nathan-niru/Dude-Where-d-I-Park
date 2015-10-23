@@ -230,6 +230,8 @@ angular.module('starter.controllers', [])
         markers.splice(markers.indexOf(savedParkingMarker), 1);
         savedParkingMarker.setIcon("resources/green-marker.png");
         savedParkingMarker.setMap(map);
+        map.setCenter(savedParkingMarker.position);
+        map.setZoom($appSettings.getSearchZoom());
       }
     
       var mcOptions = {gridSize: 50, maxZoom: 20};
