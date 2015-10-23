@@ -49,11 +49,7 @@
 }
 
 #info-buttons > .button {
-  margin: 5px;
-}
-
-#info-buttons > .button {
-  min-width: 100px;
+  margin: 0;
 }
 
 .button .button-icon {
