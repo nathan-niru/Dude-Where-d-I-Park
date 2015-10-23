@@ -3,15 +3,33 @@
   width: 100%;
 }
 
-#info-div {
-  height: 500px;
-  width: 0%; 
-  z-index: 100; 
-  top: -500px;
-  float: right; 
-  margin: 0;
-  padding: 5px;
+#info-div, #directions-panel {
+  height: 100%;
+  top: -100%;
+  float: right;
+  width: 35%;
+  overflow: auto;
+  font-family: 'Roboto','sans-serif';
+  line-height: 30px;
   position: relative;
+  margin: 0;
+}
+
+#info-text {
+  padding-left: 10px;
+}
+
+#directions-panel {
+  padding-left: 10px;
+  font-size: 12px;
+}
+
+#directions-panel select, #directions-panel input {
+  font-size: 15px;
+}
+
+#directions-panel select {
+  width: 100%;
 }
 
 #info-buttons {

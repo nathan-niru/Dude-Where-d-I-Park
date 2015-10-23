@@ -88,12 +88,13 @@ angular.module('starter.controllers', [])
       var selectButton = document.getElementById("select-button");
       var cancelButton = document.getElementById("cancel-button");
       var routeButton = document.getElementById("route-button");
+      var directionsPanel = document.getElementById('directions-panel');
 
       var currentParking = undefined;
 
-      map.addListener('mousedown', function() {
-        infoDiv.style.width = 0;
+      map.addListener('click', function() {
         infoDiv.style.display = "none";
+        directionsPanel.style.display = "none";
         mapDiv.style.width = "100%";
       });
 
@@ -119,7 +120,8 @@ angular.module('starter.controllers', [])
       });
 
       var directionsDisplay = new google.maps.DirectionsRenderer({
-        map: map
+        map: map,
+        panel: directionsPanel
       });
       var directionsService = new google.maps.DirectionsService();
       
@@ -134,6 +136,8 @@ angular.module('starter.controllers', [])
 
           directionsService.route(request, function(response, status) {
             if (status == google.maps.DirectionsStatus.OK) {
+              directionsPanel.style.display = "block";
+              infoDiv.style.display = "none";
               // Display the route on the map.
               directionsDisplay.setDirections(response);
             } else {
@@ -144,7 +148,7 @@ angular.module('starter.controllers', [])
       });
 
       var clickListener = function(data) {
-        mapDiv.style.width = "76%";
+        mapDiv.style.width = "65%";
 
         //TODO: parse description to display meaningful text
         infoText.innerHTML = data.description;
@@ -159,7 +163,6 @@ angular.module('starter.controllers', [])
           }
         }
 
-        infoDiv.style.width = "24%";
         infoDiv.style.display = "block";
         currentParking = data;
       }
