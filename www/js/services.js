@@ -27,5 +27,19 @@ angular.module('starter.services', [])
       return Number($localStorage.get('searchZoom')) || Enum.DEFAULT_SEARCH_ZOOM;
     }
   }
+}])
+
+.factory('$savedParkingService', ['$localStorage', function($localStorage) {
+  return {
+    getSavedParking: function() {
+      return $localStorage.getObject('savedParking');
+    },
+    setSavedParking: function(parkingObject) {
+      $localStorage.setObject('savedParking', parkingObject);
+    },
+    clearSavedParking: function() {
+      $localStorage.setObject('savedParking', undefined);
+    }
+  }
 }]);
 

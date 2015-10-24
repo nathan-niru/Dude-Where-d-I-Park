@@ -1,6 +1,7 @@
 angular.module('starter.controllers', [])
 
-.controller('MapCtrl', function($scope, $http, $localStorage, $appSettings, Enum) {
+.controller('MapCtrl', 
+  function($scope, $http, $localStorage, $appSettings, $savedParkingService, Enum) {
     //TODO: Separate the functionalities below into different components
     var latlng = new google.maps.LatLng(Enum.DEFAULT_LAT, Enum.DEFAULT_LNG);
     var mapOptions = {
@@ -10,10 +11,12 @@ angular.module('starter.controllers', [])
     };
     var mapDiv = document.getElementById("map-div");
     var map = new google.maps.Map(mapDiv, mapOptions);
-    navigator.geolocation.getCurrentPosition(function(position) {
-      var pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-      map.setCenter(pos);
-    });
+    if (!$savedParkingService.getSavedParking()) {
+      navigator.geolocation.getCurrentPosition(function(position) {
+        var pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+        map.setCenter(pos);
+      });
+    }
 
     // Create the search box and link it to the UI element.
     var searchInput = document.getElementById('pac-input');
@@ -109,7 +112,7 @@ angular.module('starter.controllers', [])
       }
 
       selectButton.addEventListener('click', function() {
-        $localStorage.setObject('savedParking', selectedParking);
+        $savedParkingService.setSavedParking(selectedParking);
 
         // Make the saved marker stand out by changing the icon and
         // removing it from markerCluster so it will always show on
@@ -128,7 +131,7 @@ angular.module('starter.controllers', [])
         // TODO: find a way to reuse updateParkingCard() in ParkingCtrl
         var parkingCard = document.getElementById("parking-card");
         if (parkingCard) {
-          var savedParking = $localStorage.getObject('savedParking');
+          var savedParking = $savedParkingService.getSavedParking();
           if (savedParking) {
             parkingCard.innerHTML = savedParking.description;
           }
@@ -136,7 +139,7 @@ angular.module('starter.controllers', [])
       });
 
       cancelButton.addEventListener('click', function() {
-        $localStorage.set('savedParking', undefined);
+        $savedParkingService.clearSavedParking();
 
         deindividualizeMarker(savedParkingMarker, $scope.markerClusterer);
         savedParkingMarker = undefined;
@@ -198,7 +201,7 @@ angular.module('starter.controllers', [])
 
         //TODO: parse description to display meaningful text
         infoText.innerHTML = descriptionHTML;
-        var savedParking = $localStorage.getObject('savedParking');
+        var savedParking = $savedParkingService.getSavedParking();
         if (savedParking) {
           if (data.id === savedParking.id) {
             selectButton.style.display = "none";
@@ -227,8 +230,8 @@ angular.module('starter.controllers', [])
 
         // If the marker is the marker of the already selected parking, then
         // show the accentuated marker instead
-        if ($localStorage.getObject('savedParking') &&
-          data.id === $localStorage.getObject('savedParking').id) {
+        if ($savedParkingService.getSavedParking() &&
+          data.id === $savedParkingService.getSavedParking().id) {
           savedParkingMarker = marker;
         }
         return marker;
@@ -250,10 +253,10 @@ angular.module('starter.controllers', [])
     });
 })
 
-.controller('ParkingCtrl', function($localStorage) {
+.controller('ParkingCtrl', function($localStorage, $savedParkingService) {
   updateParkingCard = function() {
     var parkingCard = document.getElementById("parking-card");
-    var savedParking = $localStorage.getObject('savedParking');
+    var savedParking = $savedParkingService.getSavedParking();
     if (savedParking) {
       parkingCard.innerHTML = savedParking.description;
     }
