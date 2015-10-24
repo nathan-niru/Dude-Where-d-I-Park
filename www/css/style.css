@@ -3,7 +3,7 @@
   width: 100%;
 }
 
-#info-panel, #directions-panel {
+#info-panel, #directions-panel, #parking-list-panel {
   height: 100%;
   top: -100%;
   float: right;
@@ -42,6 +42,14 @@
   width: 100%;
 }
 
+#calculations-panel {
+  width: 50%;
+  position: fixed;
+  top: 80%;
+  background-color: white;
+  z-index: 1000;
+}
+
 #info-buttons {
   text-align: center;
   width: 100%;
@@ -49,7 +57,8 @@
   bottom: 0;
 }
 
-#info-buttons > .button {
+#info-buttons > .button,
+#calculations-panel .button {
   margin: 0;
 }
 
@@ -60,6 +69,15 @@
 
 .button .button-icon:before {
   font-size: 16px;
+}
+
+#calculations-panel .button-icon {
+  position: absolute;
+  right: 0px;
+}
+
+#calculations-panel .button-icon:before {
+  font-size: 24px;
 }
 
 #clear-route-button {
