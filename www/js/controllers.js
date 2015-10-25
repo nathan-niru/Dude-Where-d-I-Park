@@ -8,6 +8,7 @@ angular.module('starter.controllers', [])
   $savedParkingService, 
   $parkingDataService, 
   $parkingCalculationService,
+  $timeout,
   Enum
 ) {
   //TODO: Separate the functionalities below into different components
@@ -25,12 +26,13 @@ angular.module('starter.controllers', [])
   var savedParkingMarker = undefined;
   var selectedParking = undefined;
   var selectedParkingMeter = undefined;
-
+  $scope.parkingToDisplayInRows = [];
 
   var directionsDisplay = new google.maps.DirectionsRenderer({
     panel: directionsPanel
   });
   var directionsService = new google.maps.DirectionsService();
+  var geocoder = new google.maps.Geocoder();
 
   // Change the marker icon to default and put marker into markerCluster
   function deindividualizeMarker (marker, markerClusterer) {
@@ -122,7 +124,35 @@ angular.module('starter.controllers', [])
       Enum.MAXIMUM_CHEAPEST_PARKING
     );
 
-    console.log(sortedParking);
+    sortedParking.forEach(function(parking) {
+      if (!parking.address) {
+        // Google's reverse geocoder service will throw a quota exception if we
+        // request more than five locations at once
+        var getAddress = function() {
+          geocoder.geocode({'location': parking.latLng}, function(results, status) {
+            if (status === google.maps.GeocoderStatus.OK) {
+              parking.address = results[0].formatted_address;
+              $scope.$apply();
+            } else {
+              // if the first time fails try one more time
+              $timeout(function() {
+                geocoder.geocode({'location': parking.latLng}, function(results, status) {
+                  if (status === google.maps.GeocoderStatus.OK) {
+                    parking.address = results[0].formatted_address;
+                    $scope.$apply();
+                  }
+                });
+              }, 2000);
+            }
+          });
+        }
+
+        $timeout(getAddress, 2000);
+      }
+    });
+
+    $scope.parkingToDisplayInRows = sortedParking;
+    $scope.$apply();
   });
 
   var latlng = new google.maps.LatLng(Enum.DEFAULT_LAT, Enum.DEFAULT_LNG);

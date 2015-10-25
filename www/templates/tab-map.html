@@ -42,6 +42,13 @@
       </button>
     </div>
     <div id="parking-list-panel" style="display: none;">
+      <ul class="list">
+        <li
+          class="item"
+          ng-repeat="parking in parkingToDisplayInRows" 
+          ng-include="'templates/parking-row-fragment.html'">
+        </li>
+      </ul>
     </div>
   </ion-content>
 </ion-view>

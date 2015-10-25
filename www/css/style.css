@@ -50,6 +50,16 @@
   z-index: 1000;
 }
 
+#parking-list-panel .list {
+  overflow-x: hidden;
+}
+
+#parking-list-panel .item {
+  white-space: inherit;
+  font-size: 14px;
+  line-height: 14px;
+}
+
 #info-buttons {
   text-align: center;
   width: 100%;
