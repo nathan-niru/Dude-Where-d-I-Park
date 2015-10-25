@@ -1,4 +1,4 @@
-<div class="parking-row">
+<div class="parking-row" ng-click="zoomToLatLng(parking.latLng)">
   <ion-spinner icon="spiral" ng-if="!parking.address"></ion-spinner>
   {{parking.address}}
   <br>

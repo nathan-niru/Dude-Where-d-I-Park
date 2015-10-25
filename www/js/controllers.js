@@ -111,10 +111,17 @@ angular.module('starter.controllers', [])
     mapDiv.style.width = "100%";
   });
 
+  $scope.zoomToLatLng = function (latLng) {
+    $scope.map.setCenter(latLng);
+    $scope.map.setZoom(Constant.DEFAULT_PARKING_LIST_ZOOM);
+  }
+
   cheapestParkingButton.addEventListener('click', function() {
-    mapDiv.style.width = "65%";
+    // First make the map width 100% to restore map bounds
     infoPanel.style.display = "none";
-    parkingListPanel.style.display = "block"
+    directionsPanel.style.display = "none";
+    parkingListPanel.style.display = "none";
+    mapDiv.style.width = "100%";
 
     var parkingInMapBounds = $parkingCalculationService.getParkingInMapBounds(
       $scope.map, 
@@ -153,9 +160,12 @@ angular.module('starter.controllers', [])
         $timeout(getAddress, 2000);
       }
     });
-
+  
     $scope.parkingToDisplayInRows = sortedParking;
     $scope.$apply();
+
+    mapDiv.style.width = "65%";
+    parkingListPanel.style.display = "block"
   });
 
   var latlng = new google.maps.LatLng(Constant.DEFAULT_LAT, Constant.DEFAULT_LNG);
@@ -248,6 +258,7 @@ angular.module('starter.controllers', [])
     var clickListener = function(data, marker) {
       mapDiv.style.width = "65%";
       parkingListPanel.style.display = "none";
+      directionsPanel.style.display = "none";
 
       // If there's a <br> in the beginning of the description then get
       // get rid of it since its taking up space

@@ -58,6 +58,8 @@
   white-space: inherit;
   font-size: 14px;
   line-height: 14px;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 #info-buttons {
@@ -119,6 +121,10 @@
 
 .map-content-container {
   height: 100%;
+}
+
+.parking-row {
+  cursor: pointer;
 }
 
 .spinner svg {
