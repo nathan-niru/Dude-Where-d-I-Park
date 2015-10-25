@@ -295,7 +295,7 @@ angular.module('starter.controllers', [])
       });
       // TODO: does this work if we change 'mousedown' to 'click'?
       // If yes, we should change to 'click'.
-      marker.addListener('mousedown', clickListener.bind(this, data, marker));
+      marker.addListener('click', clickListener.bind(this, data, marker));
 
       // If the marker is the marker of the already selected parking, then
       // show the accentuated marker instead
