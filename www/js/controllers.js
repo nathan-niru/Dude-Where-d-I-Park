@@ -34,6 +34,20 @@ angular.module('starter.controllers', [])
   var directionsService = new google.maps.DirectionsService();
   var geocoder = new google.maps.Geocoder();
 
+  function showPanelAndShrinkMap (panel) {
+    mapDiv.style.width = "65%";
+    panel.style.display = "block";
+    google.maps.event.trigger($scope.map, "resize");
+  }
+
+  function enlargeMapAndHidePanels () {
+    infoPanel.style.display = "none";
+    directionsPanel.style.display = "none";
+    parkingListPanel.style.display = "none";
+    mapDiv.style.width = "100%";
+    google.maps.event.trigger($scope.map, "resize");
+  }
+
   // Change the marker icon to default and put marker into markerCluster
   function deindividualizeMarker (marker, markerClusterer) {
     marker.setMap(undefined);
@@ -103,12 +117,11 @@ angular.module('starter.controllers', [])
 
   clearRouteButton.addEventListener('click', function() {
     directionsDisplay.setMap(undefined);
-    mapDiv.style.width = "100%";
+    enlargeMapAndHidePanels();
   });
 
   hideInfoPanelButton.addEventListener('click', function() {
-    infoPanel.style.display = "none";
-    mapDiv.style.width = "100%";
+    enlargeMapAndHidePanels();
   });
 
   $scope.zoomToLatLng = function (latLng) {
@@ -118,10 +131,7 @@ angular.module('starter.controllers', [])
 
   cheapestParkingButton.addEventListener('click', function() {
     // First make the map width 100% to restore map bounds
-    infoPanel.style.display = "none";
-    directionsPanel.style.display = "none";
-    parkingListPanel.style.display = "none";
-    mapDiv.style.width = "100%";
+    enlargeMapAndHidePanels();
 
     var parkingInMapBounds = $parkingCalculationService.getParkingInMapBounds(
       $scope.map, 
@@ -164,8 +174,7 @@ angular.module('starter.controllers', [])
     $scope.parkingToDisplayInRows = sortedParking;
     $scope.$apply();
 
-    mapDiv.style.width = "65%";
-    parkingListPanel.style.display = "block"
+    showPanelAndShrinkMap(parkingListPanel);
   });
 
   var latlng = new google.maps.LatLng(Constant.DEFAULT_LAT, Constant.DEFAULT_LNG);
@@ -195,10 +204,7 @@ angular.module('starter.controllers', [])
   });
 
   $scope.map.addListener('click', function() {
-    infoPanel.style.display = "none";
-    directionsPanel.style.display = "none";
-    parkingListPanel.style.display = "none";
-    mapDiv.style.width = "100%";
+    enlargeMapAndHidePanels();
   });
 
   var searchMarkers = [];
@@ -256,10 +262,6 @@ angular.module('starter.controllers', [])
     $scope.parkingData = response;
 
     var clickListener = function(data, marker) {
-      mapDiv.style.width = "65%";
-      parkingListPanel.style.display = "none";
-      directionsPanel.style.display = "none";
-
       // If there's a <br> in the beginning of the description then get
       // get rid of it since its taking up space
       var descriptionHTML = data.description;
@@ -281,7 +283,7 @@ angular.module('starter.controllers', [])
         }
       }
 
-      infoPanel.style.display = "block";
+      showPanelAndShrinkMap(infoPanel);
       selectedParking = data;
       selectedParkingMarker = marker;
     }
