@@ -1,7 +1,7 @@
-angular.module('Enums', [])
+angular.module('Constants', [])
 
-.factory('Enum', [function () {
-  var enumService = {
+.factory('Constant', [function () {
+  var constantsService = {
     DEFAULT_LAT: 49.261,
     DEFAULT_LNG: -123.246,
     DEFAULT_MAP_ZOOM: 12,
@@ -10,5 +10,5 @@ angular.module('Enums', [])
     ADDRESS_NOT_FOUND: "Address not found"
   };
 
-  return enumService;
+  return constantsService;
 }]);

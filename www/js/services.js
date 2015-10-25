@@ -21,10 +21,10 @@ angular.module('starter.services', [])
   }
 }])
 
-.factory('$appSettings', ['$localStorage', 'Enum', function($localStorage, Enum) {
+.factory('$appSettings', ['$localStorage', 'Constant', function($localStorage, Constant) {
   return {
     getSearchZoom: function() {
-      return Number($localStorage.get('searchZoom')) || Enum.DEFAULT_SEARCH_ZOOM;
+      return Number($localStorage.get('searchZoom')) || Constant.DEFAULT_SEARCH_ZOOM;
     }
   }
 }])

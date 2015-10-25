@@ -9,7 +9,7 @@ angular.module('starter.controllers', [])
   $parkingDataService, 
   $parkingCalculationService,
   $timeout,
-  Enum
+  Constant
 ) {
   //TODO: Separate the functionalities below into different components
   var infoPanel = document.getElementById("info-panel");
@@ -121,7 +121,7 @@ angular.module('starter.controllers', [])
     );
     var sortedParking = $parkingCalculationService.sortByCheapestParking(
       parkingInMapBounds,
-      Enum.MAXIMUM_CHEAPEST_PARKING
+      Constant.MAXIMUM_CHEAPEST_PARKING
     );
 
     sortedParking.forEach(function(parking) {
@@ -141,7 +141,7 @@ angular.module('starter.controllers', [])
                     parking.address = results[0].formatted_address;
                     $scope.$apply();
                   } else {
-                    parking.address = Enum.ADDRESS_NOT_FOUND_ERROR;
+                    parking.address = Constant.ADDRESS_NOT_FOUND_ERROR;
                   }
                 });
               }, 2000);
@@ -157,9 +157,9 @@ angular.module('starter.controllers', [])
     $scope.$apply();
   });
 
-  var latlng = new google.maps.LatLng(Enum.DEFAULT_LAT, Enum.DEFAULT_LNG);
+  var latlng = new google.maps.LatLng(Constant.DEFAULT_LAT, Constant.DEFAULT_LNG);
   var mapOptions = {
-      zoom: Enum.DEFAULT_MAP_ZOOM,
+      zoom: Constant.DEFAULT_MAP_ZOOM,
       center: latlng,
       mapTypeId: google.maps.MapTypeId.ROADMAP
   };
@@ -319,14 +319,14 @@ angular.module('starter.controllers', [])
   updateParkingCard();
 })
 
-.controller('SettingsCtrl', function($scope, $localStorage, Enum) {
+.controller('SettingsCtrl', function($scope, $localStorage, Constant) {
   $scope.updateSearchZoom = function() {
     $localStorage.set('searchZoom', $scope.searchZoom);
   };
 
   $scope.searchZoom = Number($localStorage.get('searchZoom'));
   if (isNaN($scope.searchZoom)) {
-    $scope.searchZoom = Enum.DEFAULT_SEARCH_ZOOM;
+    $scope.searchZoom = Constant.DEFAULT_SEARCH_ZOOM;
     $scope.updateSearchZoom();
   }
 
