@@ -121,3 +121,7 @@
   height: 100%;
 }
 
+.spinner svg {
+  width: 24px;
+  height: 24px;
+}

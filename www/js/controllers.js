@@ -140,6 +140,8 @@ angular.module('starter.controllers', [])
                   if (status === google.maps.GeocoderStatus.OK) {
                     parking.address = results[0].formatted_address;
                     $scope.$apply();
+                  } else {
+                    parking.address = Enum.ADDRESS_NOT_FOUND_ERROR;
                   }
                 });
               }, 2000);

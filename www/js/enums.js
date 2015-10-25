@@ -6,7 +6,8 @@ angular.module('Enums', [])
     DEFAULT_LNG: -123.246,
     DEFAULT_MAP_ZOOM: 12,
     DEFAULT_SEARCH_ZOOM: 18,
-    MAXIMUM_CHEAPEST_PARKING: 6
+    MAXIMUM_CHEAPEST_PARKING: 6,
+    ADDRESS_NOT_FOUND: "Address not found"
   };
 
   return enumService;
