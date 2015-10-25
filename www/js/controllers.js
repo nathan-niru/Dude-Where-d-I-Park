@@ -113,6 +113,7 @@ angular.module('starter.controllers', [])
 
   cheapestParkingButton.addEventListener('click', function() {
     mapDiv.style.width = "65%";
+    infoPanel.style.display = "none";
     parkingListPanel.style.display = "block"
 
     var parkingInMapBounds = $parkingCalculationService.getParkingInMapBounds(
@@ -246,6 +247,7 @@ angular.module('starter.controllers', [])
 
     var clickListener = function(data, marker) {
       mapDiv.style.width = "65%";
+      parkingListPanel.style.display = "none";
 
       // If there's a <br> in the beginning of the description then get
       // get rid of it since its taking up space
