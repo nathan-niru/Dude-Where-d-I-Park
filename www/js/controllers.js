@@ -262,6 +262,7 @@ angular.module('starter.controllers', [])
     $scope.parkingData = response;
 
     var clickListener = function(data, marker) {
+      enlargeMapAndHidePanels();
       // If there's a <br> in the beginning of the description then get
       // get rid of it since its taking up space
       var descriptionHTML = data.description;
