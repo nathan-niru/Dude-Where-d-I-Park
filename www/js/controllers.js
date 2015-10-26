@@ -9,6 +9,7 @@ angular.module('starter.controllers', [])
   $parkingDataService, 
   $parkingCalculationService,
   $timeout,
+  $interval,
   Constant
 ) {
   //TODO: Separate the functionalities below into different components
@@ -142,34 +143,38 @@ angular.module('starter.controllers', [])
       Constant.MAXIMUM_CHEAPEST_PARKING
     );
 
-    sortedParking.forEach(function(parking) {
-      if (!parking.address) {
-        // Google's reverse geocoder service will throw a quota exception if we
-        // request more than five locations at once
-        var getAddress = function() {
-          geocoder.geocode({'location': parking.latLng}, function(results, status) {
-            if (status === google.maps.GeocoderStatus.OK) {
-              parking.address = results[0].formatted_address;
-              $scope.$apply();
-            } else {
-              // if the first time fails try one more time
-              $timeout(function() {
-                geocoder.geocode({'location': parking.latLng}, function(results, status) {
-                  if (status === google.maps.GeocoderStatus.OK) {
-                    parking.address = results[0].formatted_address;
-                    $scope.$apply();
-                  } else {
-                    parking.address = Constant.ADDRESS_NOT_FOUND_ERROR;
-                  }
-                });
-              }, 2000);
-            }
-          });
-        }
-
-        $timeout(getAddress, 2000);
+    // Google's reverse geocoder service will throw a quota exception if we
+    // request more than five locations at once. To avoid this we queue
+    // and add a delay between requests
+    var parkingIndex = 0;
+    var getAddress = function() {
+      var parking = sortedParking[parkingIndex];
+      parkingIndex++;
+      if (parking.address) {
+        return;
       }
-    });
+
+      geocoder.geocode({'location': parking.latLng}, function(results, status) {
+        if (status === google.maps.GeocoderStatus.OK) {
+          parking.address = results[0].formatted_address;
+          $scope.$apply();
+        } else {
+          // if the first time fails try one more time
+          $timeout(function() {
+            geocoder.geocode({'location': parking.latLng}, function(results, status) {
+              if (status === google.maps.GeocoderStatus.OK) {
+                parking.address = results[0].formatted_address;
+                $scope.$apply();
+              } else {
+                parking.address = Constant.ADDRESS_NOT_FOUND_ERROR;
+              }
+            });
+          }, 2000);
+        }
+      });
+    }
+
+    $interval(getAddress, 300, sortedParking.length);
   
     $scope.parkingToDisplayInRows = sortedParking;
     $scope.$apply();
