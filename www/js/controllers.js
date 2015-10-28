@@ -379,7 +379,7 @@ angular.module('starter.controllers', [])
   }
 
   updateParkingCard();
-)
+})
 
 .controller('SettingsCtrl', function($scope, $localStorage, Constant) {
   $scope.updateSearchZoom = function() {
