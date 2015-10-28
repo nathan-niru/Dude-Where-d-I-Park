@@ -1,19 +1,54 @@
 <ion-view view-title="Map">
-  <ion-content class="padding">
-    <div class="list card">
+  <ion-content class="padding" scroll="false">
+    <div class="map-content-container" data-tap-disabled="true">
+      <input id="pac-input" type="text" placeholder="Search..." style="display: none;">
       <div class="item item-body" id="map-div" />
     </div>
-    <div class="list card" id="info-div" style="display: none;">
-      <div id="info-text"></div>
-      <div id="info-buttons">
-        <input type="hidden" id="parking-id">
-        <button class="button button-positive" id="select-button">
-          Select
-        </button>
-        <button class="button button-assertive" id="cancel-button" style="display: none;">
-          Cancel
-        </button>
+    <div id="info-panel" style="display: none;">
+      <div class="list card">
+        <div class="item item-body">
+          <div id="info-text"></div>
+        </div>
+        <div id="info-buttons">
+          <button class="button button-block button-positive" id="select-button">
+            <i class="icon ion-checkmark-round button-icon"></i>
+            Select
+          </button>
+          <button class="button button-block button-assertive" id="cancel-button" style="display: none;">
+            <i class="icon ion-close-round button-icon"></i>
+            Cancel
+          </button>
+          <button class="button button-block button-positive" id="route-button">
+            <i class="icon ion-navigate button-icon"></i>
+            Route
+          </button>
+          <button class="button button-block button-positive" id="hide-info-panel-button">
+            <i class="icon ion-chevron-right button-icon"></i>
+            Hide
+          </button>
+        </div>
       </div>
+    </div>
+    <div id="directions-panel" style="display: none;">
+      <button class="button button-positive button-full" id="clear-route-button">
+        <i class="icon ion-close-round button-icon"></i>
+        Clear Route
+      </button>
+    </div>
+    <div id="calculations-panel">
+      <button class="button button-balanced button-full" id="cheapest-parking-button">
+        Find Cheapest
+        <i class="icon ion-cash button-icon"></i>
+      </button>
+    </div>
+    <div id="parking-list-panel" style="display: none;">
+      <ul class="list">
+        <li
+          class="item"
+          ng-repeat="parking in parkingToDisplayInRows" 
+          ng-include="'templates/parking-row-fragment.html'">
+        </li>
+      </ul>
     </div>
   </ion-content>
 </ion-view>

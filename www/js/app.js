@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic','ionic.service.core','ngCordova', 'starter.controllers', 'starter.services', 'ionic.service.push'])
+angular.module('starter', ['ionic','ionic.service.core','ngCordova', 'starter.controllers', 'starter.services', 'ionic.service.push' 'Constants'])
 
 .run(function($ionicPlatform, $ionicPopup, $ionicPush) {
   $ionicPlatform.ready(function() {

@@ -1,15 +1,12 @@
 <ion-view view-title="Parking Info">
   <ion-content class="padding">
+
     <div class="" style="text-align:center">
       <strong>Time Remaining: </strong><br/>
         <h2><output id="timeLeft">00:00:00</output></h2>
     </div><br/>
 
-    <div class="">
-      Parking Meter Location: <output id="location"/><br/>
-      Price: <output id="price"/><br/>
-      Pay by Phone Number: <output id="phone"/><br/>
-    </div>
+    <div id="parking-card"></div>
     <button id="testPush" class="button button-positive" ng-click="sendNotification()">test notification</button>
     </button>
   </ion-content>
