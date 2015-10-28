@@ -85,7 +85,54 @@ angular.module('starter.controllers', [])
     });
 })
 
-.controller('ParkingCtrl', function($scope) {
+.controller('ParkingCtrl', function($scope, $http, $ionicPopup) {
+ var token = localStorage.getItem('token');
+ $scope.showAlert = function() {
+   var alertPopup = $ionicPopup.alert({
+     title: 'token',
+     template: token
+   });
+   };
+  //document.getElementById("testPush").addEventListener('click', function() {
+  $scope.sendNotification = function() {
+              // Define relevant info
+              var privateKey = 'd014976ebdf7883669a59a20decfe5d1844c9216ab645212';
+              var tokens = [localStorage.getItem('token')];
+              var appId = '48f57fe4';
+
+              // Encode your key
+              var auth = btoa(privateKey + ':');
+
+              // Build the request object
+              var req = {
+                method: 'POST',
+                url: 'https://push.ionic.io/api/v1/push',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'X-Ionic-Application-Id': appId,
+                  'Authorization': 'basic ' + auth
+                },
+                android: {
+                  "payload": {}
+                },
+                data: {
+                  "tokens": tokens,
+                  "notification": {
+                    "alert":"Dude, your parking is gonna expire!"
+                  }
+                }
+              };
+
+              // Make the API call
+              $http(req).success(function(resp){
+                // Handle success
+                console.log("Ionic Push: Push success! " + JSON.stringify(resp));
+              }).catch(function(data, status, headers, config){
+                // Handle error
+                console.log("Ionic Push: Push error...");
+              });
+
+    };
 
 })
 

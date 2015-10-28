@@ -5,9 +5,9 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
+angular.module('starter', ['ionic','ionic.service.core','ngCordova', 'starter.controllers', 'starter.services', 'ionic.service.push'])
 
-.run(function($ionicPlatform) {
+.run(function($ionicPlatform, $ionicPopup, $ionicPush) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -20,6 +20,25 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
       // org.apache.cordova.statusbar required
       StatusBar.styleLightContent();
     }
+    // register for receiving notifications
+    Ionic.io();
+
+    $ionicPush.init({
+      "debug": true,
+      "onNotification": function(notification) {
+      $ionicPopup.alert({
+                          title: 'Reminder: ',
+                          template: notification._raw.message
+                          });
+      },
+      "onRegister": function(data) {
+        localStorage.setItem('token', data.token);
+        console.log(data.token);
+      }
+    });
+
+    $ionicPush.register();
+
   });
 })
 
