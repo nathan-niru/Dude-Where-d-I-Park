@@ -83,7 +83,7 @@ angular.module('starter.services', [])
     getParkingDataAsync: function() {
       return $http({
         method: 'GET',
-        url: 'parking_data_full.json',
+        url: 'data.json',
         responseType: 'json'
       }).then(function successCallback(response) {
         if (!response || !response.data) {
