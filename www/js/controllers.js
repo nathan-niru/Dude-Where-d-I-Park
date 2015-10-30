@@ -186,7 +186,8 @@ angular.module('starter.controllers', [])
   var mapOptions = {
       zoom: Constant.DEFAULT_MAP_ZOOM,
       center: latlng,
-      mapTypeId: google.maps.MapTypeId.ROADMAP
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
+      disableDefaultUI: true
   };
   var mapDiv = document.getElementById("map-div");
   $scope.map = new google.maps.Map(mapDiv, mapOptions);
