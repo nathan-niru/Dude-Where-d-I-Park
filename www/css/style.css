@@ -48,7 +48,7 @@
 
 #calculations-panel {
   width: 50%;
-  position: fixed;
+  position: absolute;
   bottom: 1%;
   background-color: white;
   z-index: 1000;
@@ -85,15 +85,6 @@
 
 .button .button-icon:before {
   font-size: 16px;
-}
-
-#calculations-panel .button-icon {
-  position: absolute;
-  right: 0px;
-}
-
-#calculations-panel .button-icon:before {
-  font-size: 24px;
 }
 
 #clear-route-button {
