@@ -30,7 +30,7 @@ angular.module('starter.services', [])
 }])
 
 .factory('$savedParkingService', ['$localStorage', function($localStorage) {
-  return {
+  var savedParkingServiceObject = {
     getSavedParking: function() {
       return $localStorage.getObject('savedParking');
     },
@@ -39,8 +39,18 @@ angular.module('starter.services', [])
     },
     clearSavedParking: function() {
       $localStorage.setObject('savedParking', undefined);
+    },
+    setExpiryDateTime: function(dateTime) {
+      var savedParking = savedParkingServiceObject.getSavedParking();
+      savedParking.expiryDateTime = dateTime;
+      savedParkingServiceObject.setSavedParking(savedParking);
+    },
+    getExpiryDateTime: function() {
+      return savedParkingServiceObject.getSavedParking().expiryDateTime;
     }
-  }
+  };
+  
+  return savedParkingServiceObject;
 }])
 
 .factory('$parkingCalculationService', [function() {

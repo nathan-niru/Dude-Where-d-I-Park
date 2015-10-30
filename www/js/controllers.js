@@ -300,8 +300,7 @@ angular.module('starter.controllers', [])
       var marker = new google.maps.Marker({
         position: data.latLng
       });
-      // TODO: does this work if we change 'mousedown' to 'click'?
-      // If yes, we should change to 'click'.
+
       marker.addListener('click', clickListener.bind(this, data, marker));
 
       // If the marker is the marker of the already selected parking, then
@@ -329,47 +328,52 @@ angular.module('starter.controllers', [])
   });
 })
 
-.controller('ParkingCtrl', function($scope, $http, $ionicPopup, $localStorage, $savedParkingService) {
-
+.controller('ParkingCtrl', function(
+  $scope,
+  $http,
+  $ionicPopup,
+  $localStorage,
+  $savedParkingService,
+  Constant
+) {
   $scope.sendNotification = function() {
-              // Define relevant info
-              var privateKey = 'd014976ebdf7883669a59a20decfe5d1844c9216ab645212';
-              var tokens = [localStorage.getItem('token')];
-              var appId = '48f57fe4';
+    // Define relevant info
+    var privateKey = 'd014976ebdf7883669a59a20decfe5d1844c9216ab645212';
+    var tokens = [localStorage.getItem('token')];
+    var appId = '48f57fe4';
 
-              // Encode your key
-              var auth = btoa(privateKey + ':');
+    // Encode your key
+    var auth = btoa(privateKey + ':');
 
-              // Build the request object
-              var req = {
-                method: 'POST',
-                url: 'https://push.ionic.io/api/v1/push',
-                headers: {
-                  'Content-Type': 'application/json',
-                  'X-Ionic-Application-Id': appId,
-                  'Authorization': 'basic ' + auth
-                },
-                android: {
-                  "payload": {}
-                },
-                data: {
-                  "tokens": tokens,
-                  "notification": {
-                    "alert":"Dude, your parking is gonna expire!"
-                  }
-                }
-              };
-
-              // Make the API call
-              $http(req).success(function(resp){
-                // Handle success
-                console.log("Ionic Push: Push success! " + JSON.stringify(resp));
-              }).catch(function(data, status, headers, config){
-                // Handle error
-                console.log("Ionic Push: Push error...");
-              });
-
+    // Build the request object
+    var req = {
+      method: 'POST',
+      url: 'https://push.ionic.io/api/v1/push',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Ionic-Application-Id': appId,
+        'Authorization': 'basic ' + auth
+      },
+      android: {
+        "payload": {}
+      },
+      data: {
+        "tokens": tokens,
+        "notification": {
+          "alert":"Dude, your parking is gonna expire!"
+        }
+      }
     };
+
+    // Make the API call
+    $http(req).success(function(resp){
+      // Handle success
+      console.log("Ionic Push: Push success! " + JSON.stringify(resp));
+    }).catch(function(data, status, headers, config){
+      // Handle error
+      console.log("Ionic Push: Push error...");
+    });
+  };
 
   updateParkingCard = function() {
     var parkingCard = document.getElementById("parking-card");
@@ -380,6 +384,50 @@ angular.module('starter.controllers', [])
   }
 
   updateParkingCard();
+
+  updateTimer = function() {
+    if (!$scope.savedParking.parkingExpiryTime) {
+      return;
+    }
+
+    var timeLeft = (new Date($scope.savedParking.parkingExpiryTime) - Date.now()) / 1000;
+    if (timeLeft <= 0) {
+      parkingTimer.stop();
+      parkingTimer.setTime(0);
+    } else {
+      parkingTimer.setTime(timeLeft);
+      parkingTimer.start();
+    }
+  }
+
+  $scope.savedParking = $savedParkingService.getSavedParking();
+  $scope.savedParking.parkingExpiryTime = new Date($savedParkingService.getExpiryDateTime());
+
+  $scope.updateParkingExpiryTime = function() {
+    // Restrict the maximum parking time to 99 hours so the countdown UI doesn't
+    // break
+    var currentTime = Date.now();
+    var newInputDateTime = new Date($scope.savedParking.parkingExpiryTime);
+    if (isNaN(newInputDateTime.getTime())) {
+      return;
+    }
+
+    if (newInputDateTime - currentTime > Constant.MAXIMUM_TIMER_MILLISECONDS) {
+      var maximumExpiryDateTime = new Date(currentTime + Constant.MAXIMUM_TIMER_MILLISECONDS);
+      maximumExpiryDateTime.setMilliseconds(0); // Remove milliseconds
+      $scope.savedParking.parkingExpiryTime = maximumExpiryDateTime;
+    }
+
+    $savedParkingService.setExpiryDateTime($scope.savedParking.parkingExpiryTime);
+    updateTimer();
+  }
+
+  var parkingTimer = new FlipClock($('.parking-timer'), {
+    autoStart: false,
+    countdown: true
+  });
+
+  updateTimer();
 })
 
 .controller('SettingsCtrl', function($scope, $localStorage, Constant) {

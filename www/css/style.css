@@ -135,3 +135,17 @@
   width: 24px;
   height: 24px;
 }
+
+.parking-tab {
+  text-align: center;
+}
+
+.parking-tab .parking-timer {
+  display: inline-block;
+  width: inherit;
+}
+
+#parking-expiry-time {
+  display: inline-block;
+  margin-left: 20px;
+}
