@@ -31,25 +31,51 @@ angular.module('starter.services', [])
 
 .factory('$savedParkingService', ['$localStorage', function($localStorage) {
   var savedParkingServiceObject = {
+    // Need these attributes here so that controllers that have this service
+    // injected can watch these variable and do stuff when they change
+    savedParkingObject: undefined, // Keep this in sync with what is in $localStorage.getObject('savedParking')
+    parkingExpiryDateObject: undefined, // Keep this in sync with savedParkingObject.parkingExpiryTime
     getSavedParking: function() {
       return $localStorage.getObject('savedParking');
     },
     setSavedParking: function(parkingObject) {
       $localStorage.setObject('savedParking', parkingObject);
+      savedParkingServiceObject.savedParkingObject = savedParkingServiceObject.getSavedParking();
+      if (savedParkingServiceObject.savedParkingObject) {
+        savedParkingServiceObject.parkingExpiryDateObject = 
+          new Date(savedParkingServiceObject.savedParkingObject.parkingExpiryTime);
+      } else {
+        savedParkingServiceObject.parkingExpiryDateObject = undefined;
+      }
     },
     clearSavedParking: function() {
-      $localStorage.setObject('savedParking', undefined);
-    },
-    setExpiryDateTime: function(dateTime) {
-      var savedParking = savedParkingServiceObject.getSavedParking();
-      savedParking.expiryDateTime = dateTime;
-      savedParkingServiceObject.setSavedParking(savedParking);
+      savedParkingServiceObject.setSavedParking(undefined);
     },
     getExpiryDateTime: function() {
-      return savedParkingServiceObject.getSavedParking().expiryDateTime;
-    }
+      if (!savedParkingServiceObject.getSavedParking()) {
+        return undefined;
+      }
+
+      return savedParkingServiceObject.getSavedParking().parkingExpiryTime;
+    },
+    setExpiryDateTime: function(dateTime) {
+      if (!dateTime instanceof Date) {
+        throw "setExpiryDateTime() must take a Date object as input";
+      }
+
+      var savedParking = savedParkingServiceObject.getSavedParking();
+      if (!savedParking) {
+        return;
+      }
+
+      savedParking.parkingExpiryTime = dateTime;
+      savedParkingServiceObject.setSavedParking(savedParking);
+      savedParkingServiceObject.parkingExpiryDateObject = dateTime;
+    },
   };
-  
+
+  // Initialize the savedParkingObject and parkingExpiryDateObject attributes
+  savedParkingServiceObject.setSavedParking(savedParkingServiceObject.getSavedParking());
   return savedParkingServiceObject;
 }])
 

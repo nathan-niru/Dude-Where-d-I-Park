@@ -1,9 +1,9 @@
 <ion-view view-title="Parking Info">
   <ion-content class="padding parking-tab">
-    <div class="parking-timer"></div>
-    <div>
+    <div id="parking-timer"></div>
+    <div ng-if="savedParkingServiceObject.savedParkingObject">
         Parking expiry time: 
-        <input type="datetime-local" name="parking-expiry-time" id="parking-expiry-time" ng-model="savedParking.parkingExpiryTime" ng-change="updateParkingExpiryTime()"></input>
+        <input type="datetime-local" name="parking-expiry-time" id="parking-expiry-time" ng-model="savedParkingServiceObject.parkingExpiryDateObject" ng-change="updateParkingExpiryTime()"></input>
     </div>
     <div id="parking-card"></div>
     <button id="testPush" class="button button-positive" ng-click="sendNotification()">

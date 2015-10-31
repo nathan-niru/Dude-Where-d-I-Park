@@ -385,49 +385,69 @@ angular.module('starter.controllers', [])
 
   updateParkingCard();
 
+  var parkingTimer = new FlipClock($('#parking-timer'), {
+    autoStart: false,
+    countdown: true
+  });
+
   updateTimer = function() {
-    if (!$scope.savedParking.parkingExpiryTime) {
+    if (
+      !$scope.savedParkingServiceObject.savedParkingObject ||
+      !$scope.savedParkingServiceObject.parkingExpiryDateObject ||
+      isNaN($scope.savedParkingServiceObject.parkingExpiryDateObject.getTime())
+    ) {
+      parkingTimer.stop();
+      parkingTimer.setTime(0);
       return;
     }
 
-    var timeLeft = (new Date($scope.savedParking.parkingExpiryTime) - Date.now()) / 1000;
+    var timeLeft = ($scope.savedParkingServiceObject.parkingExpiryDateObject - Date.now()) / 1000;
     if (timeLeft <= 0) {
       parkingTimer.stop();
       parkingTimer.setTime(0);
     } else {
+      parkingTimer.stop();
       parkingTimer.setTime(timeLeft);
       parkingTimer.start();
     }
   }
 
-  $scope.savedParking = $savedParkingService.getSavedParking();
-  $scope.savedParking.parkingExpiryTime = new Date($savedParkingService.getExpiryDateTime());
+  $scope.savedParkingServiceObject = $savedParkingService;
+  $scope.$watch('savedParkingServiceObject.savedParkingObject', function() {
+    if (!$savedParkingService.getSavedParking()) {
+      updateTimer();
+      return;
+    }
+
+    // If we have a parking space saved but no expiry time yet, then default 
+    // the expiry time to the current time
+    if (!$savedParkingService.getExpiryDateTime()) {
+      var currentDateTime = new Date();
+      currentDateTime.setMilliseconds(0);
+      $savedParkingService.setExpiryDateTime(currentDateTime);
+    }
+
+    updateTimer();
+  });
 
   $scope.updateParkingExpiryTime = function() {
-    // Restrict the maximum parking time to 99 hours so the countdown UI doesn't
-    // break
+    // Restrict the maximum parking time to 99 hours 59 minutes 59 seconds
+    // so the countdown UI doesn't break
     var currentTime = Date.now();
-    var newInputDateTime = new Date($scope.savedParking.parkingExpiryTime);
-    if (isNaN(newInputDateTime.getTime())) {
+    var newInputDateTime = $scope.savedParkingServiceObject.parkingExpiryDateObject;
+    if (!newInputDateTime) {
       return;
     }
 
     if (newInputDateTime - currentTime > Constant.MAXIMUM_TIMER_MILLISECONDS) {
-      var maximumExpiryDateTime = new Date(currentTime + Constant.MAXIMUM_TIMER_MILLISECONDS);
-      maximumExpiryDateTime.setMilliseconds(0); // Remove milliseconds
-      $scope.savedParking.parkingExpiryTime = maximumExpiryDateTime;
+      newInputDateTime = new Date(
+        currentTime + Constant.MAXIMUM_TIMER_MILLISECONDS
+      );
+      newInputDateTime.setMilliseconds(0); // Remove milliseconds
     }
 
-    $savedParkingService.setExpiryDateTime($scope.savedParking.parkingExpiryTime);
-    updateTimer();
+    $savedParkingService.setExpiryDateTime(newInputDateTime);
   }
-
-  var parkingTimer = new FlipClock($('.parking-timer'), {
-    autoStart: false,
-    countdown: true
-  });
-
-  updateTimer();
 })
 
 .controller('SettingsCtrl', function($scope, $localStorage, Constant) {

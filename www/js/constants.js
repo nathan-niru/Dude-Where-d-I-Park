@@ -9,7 +9,7 @@ angular.module('Constants', [])
     DEFAULT_PARKING_LIST_ZOOM: 22,
     MAXIMUM_CHEAPEST_PARKING: 6,
     ADDRESS_NOT_FOUND: "Address not found",
-    MAXIMUM_TIMER_MILLISECONDS: 356400000 // 99 hours
+    MAXIMUM_TIMER_MILLISECONDS: 359999000 // 99 hours 59 minutes 59 seconds
   };
 
   return constantsService;
