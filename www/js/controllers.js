@@ -72,15 +72,6 @@ angular.module('starter.controllers', [])
 
     selectButton.style.display = "none";
     cancelButton.style.display = "inline-block";
-
-    // TODO: find a way to reuse updateParkingCard() in ParkingCtrl
-    var parkingCard = document.getElementById("parking-card");
-    if (parkingCard) {
-      var savedParking = $savedParkingService.getSavedParking();
-      if (savedParking) {
-        parkingCard.innerHTML = savedParking.description;
-      }
-    }
   });
 
   cancelButton.addEventListener('click', function() {
@@ -375,16 +366,6 @@ angular.module('starter.controllers', [])
     });
   };
 
-  updateParkingCard = function() {
-    var parkingCard = document.getElementById("parking-card");
-    var savedParking = $savedParkingService.getSavedParking();
-    if (savedParking) {
-      parkingCard.innerHTML = savedParking.description;
-    }
-  }
-
-  updateParkingCard();
-
   var parkingTimer = new FlipClock($('#parking-timer'), {
     autoStart: false,
     countdown: true
@@ -414,10 +395,15 @@ angular.module('starter.controllers', [])
 
   $scope.savedParkingServiceObject = $savedParkingService;
   $scope.$watch('savedParkingServiceObject.savedParkingObject', function() {
+    var parkingCard = document.getElementById("parking-card");
+
     if (!$savedParkingService.getSavedParking()) {
+      parkingCard.innerHTML = "";
       updateTimer();
       return;
     }
+
+    parkingCard.innerHTML = $savedParkingService.getSavedParking().description;
 
     // If we have a parking space saved but no expiry time yet, then default 
     // the expiry time to the current time
