@@ -355,7 +355,14 @@ angular.module('starter.controllers', [])
     } else {
       parkingTimer.stop();
       parkingTimer.setTime(timeLeft);
-      parkingTimer.start();
+      parkingTimer.start(function() {
+        // FlipClock should stop when the countdown hits 0 but for some reason
+        // it's not doing it, so just stop it manually
+        if (parkingTimer.getTime().getTimeSeconds() < 0) {
+          parkingTimer.stop();
+          parkingTimer.setTime(0);
+        };
+      });
 
       // Call notificationServive once the user stops altering the timer
       if (expiryInputTimer) {
