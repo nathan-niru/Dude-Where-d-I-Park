@@ -131,7 +131,7 @@
   text-align: center;
 }
 
-.parking-tab .parking-timer {
+.parking-tab #parking-timer {
   display: inline-block;
   width: inherit;
 }

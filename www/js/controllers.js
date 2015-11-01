@@ -7,6 +7,7 @@ angular.module('starter.controllers', [])
   $savedParkingService,
   $parkingDataService,
   $parkingCalculationService,
+  $notificationService,
   $timeout,
   $interval,
   Constant
@@ -75,6 +76,7 @@ angular.module('starter.controllers', [])
 
   cancelButton.addEventListener('click', function() {
     $savedParkingService.clearSavedParking();
+    $notificationService.cancelAllNotifications();
 
     deindividualizeMarker(savedParkingMarker, $scope.markerClusterer);
     savedParkingMarker = undefined;
@@ -285,7 +287,6 @@ angular.module('starter.controllers', [])
       selectedParkingMarker = marker;
     }
 
-    //console.log(response);
     var markers = response.map(function(data) {
       var marker = new google.maps.Marker({
         position: data.latLng
@@ -323,6 +324,7 @@ angular.module('starter.controllers', [])
   $localStorage,
   $savedParkingService,
   $notificationService,
+  $timeout,
   Constant
 ) {
   var parkingTimer = new FlipClock($('#parking-timer'), {
@@ -330,11 +332,8 @@ angular.module('starter.controllers', [])
     countdown: true
   });
 
+  var expiryInputTimer = undefined;
   updateTimer = function() {
-    // When we change the timer, change the notification time
-    var unixTimestamp = $scope.savedParkingServiceObject.parkingExpiryDateObject.getTime() / 1000;
-    $notificationService.scheduleNotification(unixTimestamp);
-
     if (
       !$scope.savedParkingServiceObject.savedParkingObject ||
       !$scope.savedParkingServiceObject.parkingExpiryDateObject ||
@@ -342,6 +341,8 @@ angular.module('starter.controllers', [])
     ) {
       parkingTimer.stop();
       parkingTimer.setTime(0);
+
+      $notificationService.cancelAllNotifications();
       return;
     }
 
@@ -349,10 +350,23 @@ angular.module('starter.controllers', [])
     if (timeLeft <= 0) {
       parkingTimer.stop();
       parkingTimer.setTime(0);
+
+      $notificationService.cancelAllNotifications();
     } else {
       parkingTimer.stop();
       parkingTimer.setTime(timeLeft);
       parkingTimer.start();
+
+      // Call notificationServive once the user stops altering the timer
+      if (expiryInputTimer) {
+        $timeout.cancel(expiryInputTimer);
+      }
+      expiryInputTimer = $timeout(
+        function() {
+          $notificationService.scheduleNotification($scope.savedParkingServiceObject.parkingExpiryDateObject);
+        }, 
+        Constant.EXPIRY_INPUT_TIMEOUT
+      );
     }
   }
 

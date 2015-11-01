@@ -155,53 +155,38 @@ angular.module('starter.services', [])
           }
         });
       }, function errorCallback(response) {
-        // called asynchronously if an error occurs
-        // or server returns response with an error status.
+        // TODO: Handle error here
       });
     }
   }
 }])
 
-.factory('$notificationService', ['$http', '$localStorage', function($http, $localStorage) {
+.factory('$notificationService', 
+  ['$cordovaLocalNotification', '$localStorage', 
+  function($cordovaLocalNotification, $localStorage) {
+  // TODO: Find a way to get localNotification working on browser
   return {
-    scheduleNotification: function(notificationUnixTimestamp) {
-      // Define relevant info
-      var privateKey = 'd014976ebdf7883669a59a20decfe5d1844c9216ab645212';
-      var tokens = [$localStorage.get('token')];
-      var appId = '48f57fe4';
+    scheduleNotification: function(notificationDateObject) {
+      console.log(notificationDateObject);
+      if (!window.cordova) {
+        // Workaround for browser so app doesn't crash 
+        return;
+      }
 
-      // Encode your key
-      var auth = btoa(privateKey + ':');
-
-      // Build the request object
-      var req = {
-        method: 'POST',
-        url: 'https://push.ionic.io/api/v1/push',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Ionic-Application-Id': appId,
-          'Authorization': 'basic ' + auth
-        },
-        android: {
-          "payload": {}
-        },
-        data: {
-          "tokens": tokens,
-          "scheduled": notificationUnixTimestamp,
-          "notification": {
-            "alert":"Dude, your parking is gonna expire!"
-          }
-        }
-      };
-
-      // Make the API call
-      $http(req).success(function(resp){
-        // TODO: Handle success
-        console.log("Ionic Push: Push success! " + JSON.stringify(resp));
-      }).catch(function(data, status, headers, config){
-        // TODO: Handle error
-        console.log("Ionic Push: Push error...");
+      $cordovaLocalNotification.schedule({
+        text: 'Your parking is about to expire!',
+        at: notificationDateObject
+      }).then(function () {
+        // TODO: Maybe do something here to inform the user that a notification
+        // has been scheduled
       });
+    },
+    cancelAllNotifications: function() {
+      if (!window.cordova) {
+        // Workaround for browser so app doesn't crash 
+        return;
+      }
+      $cordovaLocalNotification.cancelAll();
     }
   }
 }]);

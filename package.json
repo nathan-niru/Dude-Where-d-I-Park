@@ -21,7 +21,7 @@
     "cordova-plugin-splashscreen",
     "com.ionic.keyboard",
     "phonegap-plugin-push",
-    "com.plugin.datepicker"
+    "de.appplant.cordova.plugin.local-notification",
   ],
   "cordovaPlatforms": [
     "android",

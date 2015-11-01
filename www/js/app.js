@@ -20,6 +20,7 @@ angular.module('starter', ['ionic','ionic.service.core','ngCordova', 'starter.co
       StatusBar.styleLightContent();
     }
 
+    /*
     // register for receiving notifications
     Ionic.io();
 
@@ -38,6 +39,7 @@ angular.module('starter', ['ionic','ionic.service.core','ngCordova', 'starter.co
     });
 
     $ionicPush.register();
+    */
   });
 })
 
