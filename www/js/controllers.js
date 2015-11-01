@@ -2,7 +2,6 @@ angular.module('starter.controllers', [])
 
 .controller('MapCtrl', function(
   $scope,
-  $http,
   $localStorage,
   $appSettings,
   $savedParkingService,
@@ -321,57 +320,21 @@ angular.module('starter.controllers', [])
 
 .controller('ParkingCtrl', function(
   $scope,
-  $http,
-  $ionicPopup,
   $localStorage,
   $savedParkingService,
+  $notificationService,
   Constant
 ) {
-  $scope.sendNotification = function() {
-    // Define relevant info
-    var privateKey = 'd014976ebdf7883669a59a20decfe5d1844c9216ab645212';
-    var tokens = [localStorage.getItem('token')];
-    var appId = '48f57fe4';
-
-    // Encode your key
-    var auth = btoa(privateKey + ':');
-
-    // Build the request object
-    var req = {
-      method: 'POST',
-      url: 'https://push.ionic.io/api/v1/push',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Ionic-Application-Id': appId,
-        'Authorization': 'basic ' + auth
-      },
-      android: {
-        "payload": {}
-      },
-      data: {
-        "tokens": tokens,
-        "notification": {
-          "alert":"Dude, your parking is gonna expire!"
-        }
-      }
-    };
-
-    // Make the API call
-    $http(req).success(function(resp){
-      // Handle success
-      console.log("Ionic Push: Push success! " + JSON.stringify(resp));
-    }).catch(function(data, status, headers, config){
-      // Handle error
-      console.log("Ionic Push: Push error...");
-    });
-  };
-
   var parkingTimer = new FlipClock($('#parking-timer'), {
     autoStart: false,
     countdown: true
   });
 
   updateTimer = function() {
+    // When we change the timer, change the notification time
+    var unixTimestamp = $scope.savedParkingServiceObject.parkingExpiryDateObject.getTime() / 1000;
+    $notificationService.scheduleNotification(unixTimestamp);
+
     if (
       !$scope.savedParkingServiceObject.savedParkingObject ||
       !$scope.savedParkingServiceObject.parkingExpiryDateObject ||

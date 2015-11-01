@@ -7,14 +7,13 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic','ionic.service.core','ngCordova', 'starter.controllers', 'starter.services', 'ionic.service.push', 'Constants'])
 
-.run(function($ionicPlatform, $ionicPopup, $ionicPush) {
+.run(function($ionicPlatform, $ionicPopup, $ionicPush, $localStorage) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
     if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
       cordova.plugins.Keyboard.disableScroll(true);
-
     }
     if (window.StatusBar) {
       // org.apache.cordova.statusbar required
@@ -27,19 +26,18 @@ angular.module('starter', ['ionic','ionic.service.core','ngCordova', 'starter.co
     $ionicPush.init({
       "debug": true,
       "onNotification": function(notification) {
-      $ionicPopup.alert({
-                          title: 'Reminder: ',
-                          template: notification._raw.message
-                          });
+        $ionicPopup.alert({
+          title: 'Reminder: ',
+          template: notification._raw.message
+        });
       },
       "onRegister": function(data) {
-        localStorage.setItem('token', data.token);
+        $localStorage.set('token', data.token);
         console.log(data.token);
       }
     });
 
     $ionicPush.register();
-
   });
 })
 
