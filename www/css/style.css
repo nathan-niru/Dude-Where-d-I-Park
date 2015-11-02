@@ -136,6 +136,7 @@
 .parking-tab #parking-timer {
   display: inline-block;
   width: inherit;
+  zoom: 0.7;
 }
 
 #parking-expiry-time {
