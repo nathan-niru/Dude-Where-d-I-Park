@@ -25,10 +25,12 @@
 
 #info-panel .card .item-body {
   border-width: 0;
+  padding: 2px;
 }
 
 #info-text {
-  padding-left: 10px;
+  font-size: 14px;
+  line-height: 16px;
 }
 
 #directions-panel {
