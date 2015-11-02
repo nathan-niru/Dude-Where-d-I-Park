@@ -24,7 +24,38 @@ angular.module('starter.services', [])
 .factory('$appSettings', ['$localStorage', 'Constant', function($localStorage, Constant) {
   return {
     getSearchZoom: function() {
-      return Number($localStorage.get('searchZoom')) || Constant.DEFAULT_SEARCH_ZOOM;
+      if (!$localStorage.get('searchZoom') ||
+        !parseInt($localStorage.get('searchZoom'))) {
+        return Constant.DEFAULT_SEARCH_ZOOM;
+      }
+
+      return parseInt($localStorage.get('searchZoom'));
+    },
+    setSearchZoom: function(searchZoomInt) {
+      var parsedZoomInt = parseInt(searchZoomInt);
+      if (parsedZoomInt) {
+        $localStorage.set('searchZoom', parsedZoomInt);
+      }
+    },
+    getNotificationReminderMinutes: function() {
+      if (!$localStorage.get('notificationReminderMinutes') ||
+        !parseInt($localStorage.get('notificationReminderMinutes'))) {
+        return Constant.DEFAULT_REMINDER_MINUTES;
+      }
+
+      return parseInt($localStorage.get('notificationReminderMinutes'));
+    },
+    setNotificationReminderMinutes: function(notificationReminderMinutes) {
+      // TODO: Update notifications that are already scheduled with the new time
+      var parsedNotificationReminderMinutes = parseInt(notificationReminderMinutes);
+      if (parsedNotificationReminderMinutes) {
+        if (parsedNotificationReminderMinutes > Constant.MAXIMUM_REMINDER_MINUTES ||
+          parsedNotificationReminderMinutes < 0) {
+          parsedNotificationReminderMinutes = Constant.MAXIMUM_REMINDER_MINUTES;
+        }
+
+        $localStorage.set('notificationReminderMinutes', parsedNotificationReminderMinutes);
+      }
     }
   }
 }])
@@ -162,20 +193,22 @@ angular.module('starter.services', [])
 }])
 
 .factory('$notificationService', 
-  ['$cordovaLocalNotification', '$localStorage', 
-  function($cordovaLocalNotification, $localStorage) {
+  ['$cordovaLocalNotification', '$localStorage', '$appSettings',
+  function($cordovaLocalNotification, $localStorage, $appSettings) {
   // TODO: Find a way to get localNotification working on browser
   return {
-    scheduleNotification: function(notificationDateObject) {
-      console.log(notificationDateObject);
+    scheduleNotification: function(parkingExpiryDateObject) {
       if (!window.cordova) {
         // Workaround for browser so app doesn't crash 
         return;
       }
+      var notificationReminderMilliseconds = 
+        $appSettings.getNotificationReminderMinutes() * 60 * 1000;
+      var notificationDate = new Date(parkingExpiryDateObject.getTime() - notificationReminderMilliseconds);
 
       $cordovaLocalNotification.schedule({
         text: 'Your parking is about to expire!',
-        at: notificationDateObject
+        at: notificationDate
       }).then(function () {
         // TODO: Maybe do something here to inform the user that a notification
         // has been scheduled

@@ -11,7 +11,7 @@
 
       <label class="item item-input item-label">
         <span class="input-label">Reminder time in minutes</span>
-        <input type="number" ng-model="defaultTime" ng-change="updateTime()">
+        <input type="number" ng-model="notificationReminderMinutes" ng-change="updateNotificationReminderTime()">
       </label>
 
       <ion-toggle ng-model="vibrate" ng-change="updateVibrate()" ng-checked="vibrate">

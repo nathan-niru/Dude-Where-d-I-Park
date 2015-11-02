@@ -420,24 +420,21 @@ angular.module('starter.controllers', [])
   }
 })
 
-.controller('SettingsCtrl', function($scope, $localStorage, Constant) {
+.controller('SettingsCtrl', function($scope, $localStorage, $appSettings, Constant) {
   $scope.updateSearchZoom = function() {
-    $localStorage.set('searchZoom', $scope.searchZoom);
-  };
-
-  $scope.searchZoom = Number($localStorage.get('searchZoom'));
-  if (isNaN($scope.searchZoom)) {
-    $scope.searchZoom = Constant.DEFAULT_SEARCH_ZOOM;
-    $scope.updateSearchZoom();
+    $appSettings.setSearchZoom($scope.searchZoom);
+    $scope.searchZoom = $appSettings.getSearchZoom();
   }
 
-  $scope.defaultTime = Number($localStorage.get('defaultTime'));
-    if (isNaN($scope.defaultTime)) {
-    $scope.defaultTime = 15;
-  }
-  $scope.updateTime = function() {
-    $localStorage.set('defaultTime', $scope.defaultTime);
+  $scope.searchZoom = $appSettings.getSearchZoom();
+  $scope.updateSearchZoom();
+
+  $scope.updateNotificationReminderTime = function() {
+    $appSettings.setNotificationReminderMinutes($scope.notificationReminderMinutes);
+    $scope.notificationReminderMinutes = $appSettings.getNotificationReminderMinutes();
   };
+  $scope.notificationReminderMinutes = $appSettings.getNotificationReminderMinutes();
+  $scope.updateNotificationReminderTime();
 
   $scope.vibrate = $localStorage.get('vibrate');
   if ($scope.vibrate == 'false') {
