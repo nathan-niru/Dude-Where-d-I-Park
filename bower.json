@@ -7,6 +7,10 @@
     "ngCordova": "~0.1.20-alpha",
     "ionic-service-push": "~0.1.13",
     "ionic-service-core": "~0.1.10",
-    "angular-mocks": "~1.4.7"
+    "angular-mocks": "~1.4.7",
+    "angular": "~1.4.7"
+  },
+  "resolutions": {
+    "angular": "1.4.3"
   }
 }
