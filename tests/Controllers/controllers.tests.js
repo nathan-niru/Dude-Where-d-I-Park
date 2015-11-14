@@ -1,25 +1,36 @@
 describe('SettingsController', function(){
-  var scope,
-  localStorage;
+  var $scope,
+      localStorage,
+      appSettings;
 
+  beforeEach(function() {
     // load the controller's modules
-    beforeEach(module('starter.controllers'));
-    beforeEach(module('starter.services'));
-    beforeEach(module('Constants'));
+    module('starter.controllers');
+    module('starter.services');
+    module('Constants');
 
-    beforeEach(inject(function(
+    inject(function(
       $rootScope,
       $controller,
       $localStorage,
       $appSettings
     ) {
-      scope = $rootScope;
-      $controller('SettingsCtrl', {$scope: scope});
-    }));
-
-    // tests start here
-    it('should have vibrate true', function(){
-      expect(scope.vibrate).toEqual(true);
+      $scope = $rootScope;
+      localStorage = $localStorage;
+      appSettings = $appSettings
+      
+      // create controller
+      $controller('SettingsCtrl', {
+        $scope: $scope,
+        $localStorage: localStorage,
+        $appSettings: appSettings
+      });
     });
   });
+
+  // tests start here
+  it('should have vibrate true', function(){
+    expect($scope.vibrate).toEqual(true);
+  });
+});
 
