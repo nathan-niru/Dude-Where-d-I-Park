@@ -17,7 +17,7 @@ describe('SettingsController', function(){
     ) {
       $scope = $rootScope;
       localStorage = $localStorage;
-      appSettings = $appSettings
+      appSettings = $appSettings;
       
       // create controller
       $controller('SettingsCtrl', {
