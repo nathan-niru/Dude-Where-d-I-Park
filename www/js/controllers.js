@@ -183,6 +183,7 @@ angular.module('starter.controllers', [])
   };
   var mapDiv = document.getElementById("map-div");
   $scope.map = new google.maps.Map(mapDiv, mapOptions);
+  var GeoMarker = new GeolocationMarker($scope.map);
   if (!$savedParkingService.getSavedParking()) {
     navigator.geolocation.getCurrentPosition(function(position) {
       var pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
@@ -371,7 +372,7 @@ angular.module('starter.controllers', [])
       expiryInputTimer = $timeout(
         function() {
           $notificationService.scheduleNotification($scope.savedParkingServiceObject.parkingExpiryDateObject);
-        }, 
+        },
         Constant.EXPIRY_INPUT_TIMEOUT
       );
     }
@@ -389,7 +390,7 @@ angular.module('starter.controllers', [])
 
     parkingCard.innerHTML = $savedParkingService.getSavedParking().description;
 
-    // If we have a parking space saved but no expiry time yet, then default 
+    // If we have a parking space saved but no expiry time yet, then default
     // the expiry time to the current time
     if (!$savedParkingService.getExpiryDateTime()) {
       var currentDateTime = new Date();
