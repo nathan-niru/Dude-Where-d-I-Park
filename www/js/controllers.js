@@ -23,10 +23,12 @@ angular.module('starter.controllers', [])
   var hideInfoPanelButton = document.getElementById("hide-info-panel-button");
   var clearRouteButton = document.getElementById('clear-route-button');
   var cheapestParkingButton = document.getElementById('cheapest-parking-button');
+  var hideShowMarkersButton = document.getElementById('hide-show-markers-button');
 
   var savedParkingMarker = undefined;
   var selectedParking = undefined;
   var selectedParkingMeter = undefined;
+  var markers = undefined;
   $scope.parkingToDisplayInRows = [];
 
   var directionsDisplay = new google.maps.DirectionsRenderer({
@@ -174,6 +176,28 @@ angular.module('starter.controllers', [])
     showPanelAndShrinkMap(parkingListPanel);
   });
 
+  hideShowMarkersButton.addEventListener('click', function() {
+    // Hide Markers causes all markers except the selected one (if one exists) to be cleared from map
+    if(hideShowMarkersButton.innerHTML == 'Hide Markers') {
+      $scope.markerClusterer.clearMarkers(); 
+      if (savedParkingMarker) $scope.markerClusterer.addMarker(savedParkingMarker);
+      hideShowMarkersButton.innerHTML = 'Show Markers';
+    }
+    // Show Markers adds all markers back to the map
+    else {
+      if (savedParkingMarker) {
+        // add all markers
+        $scope.markerClusterer.removeMarker(savedParkingMarker);
+        $scope.markerClusterer.addMarkers(markers);
+        // re-add saved marker so that it shows up outside of the cluster
+        $scope.markerClusterer.removeMarker(savedParkingMarker);
+        savedParkingMarker.setMap($scope.map);
+      }
+      else $scope.markerClusterer.addMarkers(markers);
+      hideShowMarkersButton.innerHTML = 'Hide Markers';
+    }
+  });
+
   var latlng = new google.maps.LatLng(Constant.DEFAULT_LAT, Constant.DEFAULT_LNG);
   var mapOptions = {
       zoom: Constant.DEFAULT_MAP_ZOOM,
@@ -288,7 +312,7 @@ angular.module('starter.controllers', [])
       selectedParkingMarker = marker;
     }
 
-    var markers = response.map(function(data) {
+    markers = response.map(function(data) {
       var marker = new google.maps.Marker({
         position: data.latLng
       });

@@ -39,12 +39,13 @@
       <button class="button button-balanced button-full" id="cheapest-parking-button">
         Find Cheapest
       </button>
+      <button class="button button-calm button-full" id="hide-show-markers-button">Hide Markers</button>
     </div>
     <div id="parking-list-panel" style="display: none;">
       <ul class="list">
         <li
           class="item"
-          ng-repeat="parking in parkingToDisplayInRows" 
+          ng-repeat="parking in parkingToDisplayInRows"
           ng-include="'templates/parking-row-fragment.html'">
         </li>
       </ul>
