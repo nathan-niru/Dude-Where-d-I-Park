@@ -1,7 +1,7 @@
 <ion-view view-title="Map">
   <ion-content class="padding" scroll="false">
     <div class="map-content-container" data-tap-disabled="true">
-      <input id="pac-input" type="text" placeholder="Search..." style="display: none;">
+      <input id="pac-input" type="text" placeholder="Search..." style="display: none;" ng-focus="disableTap()">
       <div class="item item-body" id="map-div" />
     </div>
     <div id="info-panel" style="display: none;">

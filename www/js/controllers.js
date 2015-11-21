@@ -124,6 +124,16 @@ angular.module('starter.controllers', [])
     $scope.map.setZoom(Constant.DEFAULT_PARKING_LIST_ZOOM);
   }
 
+  $scope.disableTap = function(){
+    container = document.getElementsByClassName('pac-container');
+    // disable ionic data tab
+    angular.element(container).attr('data-tap-disabled', 'true');
+    // leave input field if google-address-entry is selected
+    angular.element(container).on("click", function(){
+        document.getElementById('pac-input').blur();
+    });
+  };
+
   cheapestParkingButton.addEventListener('click', function() {
     // First make the map width 100% to restore map bounds
     enlargeMapAndHidePanels();
