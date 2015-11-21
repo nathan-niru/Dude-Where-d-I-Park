@@ -342,6 +342,11 @@ angular.module('starter.controllers', [])
     // called asynchronously if an error occurs
     // or server returns response with an error status.
   });
+  
+  // resize map when switching to map tab to fix bug where map doesn't load completely` after changing settings
+  $scope.$on('$ionicView.enter', function() {
+     enlargeMapAndHidePanels();
+  })
 })
 
 .controller('ParkingCtrl', function(
