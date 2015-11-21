@@ -227,6 +227,7 @@ angular.module('starter.controllers', [])
   });
 
   $scope.map.addListener('click', function() {
+    document.getElementById('pac-input').blur();
     enlargeMapAndHidePanels();
   });
 
