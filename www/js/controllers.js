@@ -99,8 +99,8 @@ angular.module('starter.controllers', [])
 
       directionsService.route(request, function(response, status) {
         if (status == google.maps.DirectionsStatus.OK) {
-          directionsPanel.style.display = "block";
-          infoPanel.style.display = "none";
+          enlargeMapAndHidePanels();
+          showPanelAndShrinkMap(directionsPanel);
           // Display the route on the map.
           directionsDisplay.setDirections(response);
         } else {
@@ -117,6 +117,29 @@ angular.module('starter.controllers', [])
 
   hideInfoPanelButton.addEventListener('click', function() {
     enlargeMapAndHidePanels();
+  });
+
+  $scope.$root.$on('routeBackToParking', function() {
+    directionsDisplay.setMap($scope.map);
+    navigator.geolocation.getCurrentPosition(function(position) {
+      var pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+      var request = {
+        destination: $savedParkingService.getSavedParking().latLng,
+        origin: pos,
+        travelMode: google.maps.TravelMode.WALKING
+      };
+
+      directionsService.route(request, function(response, status) {
+        if (status == google.maps.DirectionsStatus.OK) {
+          enlargeMapAndHidePanels();
+          showPanelAndShrinkMap(directionsPanel);
+          // Display the route on the map.
+          directionsDisplay.setDirections(response);
+        } else {
+          // TODO: Display error if we can't get response from directionService
+        }
+      });
+    });
   });
 
   $scope.zoomToLatLng = function (latLng) {
@@ -189,7 +212,7 @@ angular.module('starter.controllers', [])
   hideShowMarkersButton.addEventListener('click', function() {
     // Hide Markers causes all markers except the selected one (if one exists) to be cleared from map
     if(hideShowMarkersButton.innerHTML == 'Hide Markers') {
-      $scope.markerClusterer.clearMarkers(); 
+      $scope.markerClusterer.clearMarkers();
       if (savedParkingMarker) $scope.markerClusterer.addMarker(savedParkingMarker);
       hideShowMarkersButton.innerHTML = 'Show Markers';
     }
@@ -366,6 +389,7 @@ angular.module('starter.controllers', [])
   $savedParkingService,
   $notificationService,
   $timeout,
+  $location,
   Constant
 ) {
   var parkingTimer = new FlipClock($('#parking-timer'), {
@@ -458,6 +482,11 @@ angular.module('starter.controllers', [])
     }
 
     $savedParkingService.setExpiryDateTime(newInputDateTime);
+  }
+
+  $scope.routeBackToParking = function() {
+    $scope.$root.$emit('routeBackToParking');
+    $location.path("");
   }
 })
 

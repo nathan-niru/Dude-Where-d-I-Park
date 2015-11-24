@@ -2,10 +2,17 @@
   <ion-content class="padding parking-tab" scroll="false">
     <div id="parking-timer"></div>
     <div ng-if="savedParkingServiceObject.savedParkingObject">
-        Parking expiry time: 
-        <input type="datetime-local" name="parking-expiry-time" id="parking-expiry-time" ng-model="savedParkingServiceObject.parkingExpiryDateObject" ng-change="updateParkingExpiryTime()"></input>
+      Parking expiry time: 
+      <input type="datetime-local" name="parking-expiry-time" id="parking-expiry-time" ng-model="savedParkingServiceObject.parkingExpiryDateObject" ng-change="updateParkingExpiryTime()"></input>
     </div>
     <div id="parking-card"></div>
+    <button 
+      class="button button-block button-positive" 
+      id="redirect-to-parking-button" 
+      ng-if="savedParkingServiceObject.savedParkingObject"
+      ng-click="routeBackToParking()">
+      <i class="icon ion-arrow-return-left button-icon"></i>
+        Route
     </button>
   </ion-content>
 </ion-view>
