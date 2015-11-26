@@ -11,7 +11,7 @@ describe('localStorage Unit Tests', function(){
     });
   });
 
-//tests start here
+//localStorage tests start here
   it('can get an instance of my factory', function() {
     expect(localStorage).toBeDefined();
   });
@@ -20,6 +20,9 @@ describe('localStorage Unit Tests', function(){
     localStorage.set("a", "ABC");
     expect(localStorage.get("a")).toEqual("ABC");
   });
+    
+// localStorage test end here    
+
 });
 
 
@@ -37,10 +40,58 @@ describe('appSettings Unit Tests', function(){
     });
   });
 
-//tests start here
+//appSettings tests start here
   it('can get an instance of my factory', function() {
     expect(appSettings).toBeDefined();
   });
+    
+  it('should set and get the Zoom integers', function() {
+    appSettings.setSearchZoom(1);
+    expect(appSettings.getSearchZoom()).toEqual(1);
+  });
+    
+    it('should set and get the Zoom integers', function() {
+    appSettings.setSearchZoom(1);
+    expect(appSettings.getSearchZoom()).toEqual(1);
+  });
+    
+    it('should throw an error for 0 input when setting Search Zoom', function() {
+    appSettings.setNotificationReminderMinutes(0);
+    expect(appSettings.getNotificationReminderMinutes()).toEqual(console.log("value must be great than 0"));
+  });
+    
+      it('should throw an error for negative input when setting Search Zoom', function() {
+    appSettings.setNotificationReminderMinutes(-1);
+    expect(appSettings.getNotificationReminderMinutes()).toEqual(console.log("Search Zoom is a negative input"));
+  });
+    
+    it('should set and get Notificaiton Reminder Integer', function() {
+    appSettings.setNotificationReminderMinutes(5);
+    expect(appSettings.getNotificationReminderMinutes()).toEqual(5);
+  });
+    
+    it('should set and get Notificaiton Reminder Lower Bounds ', function() {
+    appSettings.setNotificationReminderMinutes(1);
+    expect(appSettings.getNotificationReminderMinutes()).toEqual(1);
+  });
+    
+    it('should set and get Notificaiton Reminder Upper Bounds', function() {
+    appSettings.setNotificationReminderMinutes(10);
+    expect(appSettings.getNotificationReminderMinutes()).toEqual(10);
+  });
+    
+     it('should throw an error for 0 input when setting Notfication Reminder', function() {
+    appSettings.setNotificationReminderMinutes(0);
+    expect(appSettings.getNotificationReminderMinutes()).toEqual(console.log("value must be great than 0"));
+  });
+    
+      it('should throw an error for negative input when setting Notfication Reminder', function() {
+    appSettings.setNotificationReminderMinutes(-1);
+    expect(appSettings.getNotificationReminderMinutes()).toEqual(console.log("Notification Reminder is a negative input"));
+  });
+    
+//appSettings tests end here
+    
 });
 
 
@@ -57,10 +108,15 @@ describe('savedParkingService Unit Tests', function(){
     });
   });
 
-//tests start here
+//SavedParkingServices tests start here
   it('can get an instance of my factory', function() {
     expect(savedParkingService).toBeDefined();
   });
+    
+
+    
+
+ //SavedParkingServices tests end here
 });
 
 
@@ -105,7 +161,7 @@ describe('parkingDataService Unit Tests', function(){
 
 
 // TODO: Get cordovaLocalNotification working in tests
-// 
+//
 // describe('notificationService Unit Tests', function(){
 //   var notificationService;
 
