@@ -57,12 +57,12 @@ describe('appSettings Unit Tests', function(){
     
     it('should throw an error for 0 input when setting Search Zoom', function() {
     appSettings.setNotificationReminderMinutes(0);
-    expect(appSettings.getNotificationReminderMinutes()).toEqual(console.log("value must be great than 0"));
+    expect(appSettings.setSearchZoom()).toEqual(console.log("value must be great than 0"));
   });
     
       it('should throw an error for negative input when setting Search Zoom', function() {
     appSettings.setNotificationReminderMinutes(-1);
-    expect(appSettings.getNotificationReminderMinutes()).toEqual(console.log("Search Zoom is a negative input"));
+    expect(appSettings.setSearchZoom()).toEqual(console.log("Search Zoom is a negative input"));
   });
     
     it('should set and get Notificaiton Reminder Integer', function() {
@@ -81,13 +81,11 @@ describe('appSettings Unit Tests', function(){
   });
     
      it('should throw an error for 0 input when setting Notfication Reminder', function() {
-    appSettings.setNotificationReminderMinutes(0);
-    expect(appSettings.getNotificationReminderMinutes()).toEqual(console.log("value must be great than 0"));
+     expect(appSettings.setNotificationReminderMinutes(0)).toEqual(console.log("value must be great than 0"));
   });
     
       it('should throw an error for negative input when setting Notfication Reminder', function() {
-    appSettings.setNotificationReminderMinutes(-1);
-    expect(appSettings.getNotificationReminderMinutes()).toEqual(console.log("Notification Reminder is a negative input"));
+    expect(appSettings.setNotificationReminderMinutes(-1)).toEqual(console.log("Notification Reminder must be great than 0"));
   });
     
 //appSettings tests end here

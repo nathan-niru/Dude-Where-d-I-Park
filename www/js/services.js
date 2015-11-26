@@ -32,10 +32,13 @@ angular.module('starter.services', [])
       return parseInt($localStorage.get('searchZoom'));
     },
     setSearchZoom: function(searchZoomInt) {
+        if(searchZoomInt == 0){console.log("value must be great than 0");
+        }
+            else{
       var parsedZoomInt = parseInt(searchZoomInt);
       if (parsedZoomInt) {
         $localStorage.set('searchZoom', parsedZoomInt);
-      }
+      }}
     },
     getNotificationReminderMinutes: function() {
       if (!$localStorage.get('notificationReminderMinutes') ||
@@ -47,6 +50,8 @@ angular.module('starter.services', [])
     },
     setNotificationReminderMinutes: function(notificationReminderMinutes) {
       // TODO: Update notifications that are already scheduled with the new time
+        if (notificationReminderMinutes <= 0 ){ console.log("Notification Reminder must be great than 0")}
+        else{
       var parsedNotificationReminderMinutes = parseInt(notificationReminderMinutes);
       if (parsedNotificationReminderMinutes) {
         if (parsedNotificationReminderMinutes > Constant.MAXIMUM_REMINDER_MINUTES ||
@@ -55,7 +60,7 @@ angular.module('starter.services', [])
         }
 
         $localStorage.set('notificationReminderMinutes', parsedNotificationReminderMinutes);
-      }
+      }}
     }
   }
 }])
