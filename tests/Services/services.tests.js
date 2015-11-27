@@ -149,13 +149,10 @@ describe('savedParkingService Unit Tests', function(){
     expect(savedParkingService.getExpiryDateTime()).not.toBeDefined();
   });
 
-
-    
-
  //SavedParkingServices tests end here
 });
 
-
+// ParkingCalculationsService tests
 describe('parkingCalculationService Unit Tests', function(){
   var parkingCalculationService;
 
@@ -175,9 +172,9 @@ describe('parkingCalculationService Unit Tests', function(){
   });
 });
 
-
+// ParkingDataService tests
 describe('parkingDataService Unit Tests', function(){
-  var parkingDataService;
+  var parkingDataService, $httpBackend
 
   beforeEach(function() {
     module('starter.services');
@@ -189,10 +186,38 @@ describe('parkingDataService Unit Tests', function(){
     });
   });
 
-//tests start here
-  it('can get an instance of my factory', function() {
-    expect(parkingDataService).toBeDefined();
-  });
+     beforeEach(inject(function($injector) {
+       // Set up the mock http service responses
+       $httpBackend = $injector.get('$httpBackend');
+     }));
+
+    it('can get an instance of my factory', function() {
+      expect(parkingDataService).toBeDefined();
+    });
+
+   it('test http service using mock', function() {
+     var $scope = {};
+
+     parkingDataService.getParkingDataAsync().then(function successCallback(response) {
+      $scope.valid = true;
+      $scope.response = response;
+     }, function errorCallback(response) {});
+
+      // define test parking meter for mock response
+      var json = [{"id":3576,"description":"<br>Meter Head Type: Twin<br>Time Limit: 2 Hr<br>Rate: $6.00<br>Credit Card Enabled: CREDIT_CARD<br>Time in Effect: METER IN EFFECT: 9:00 AM TO 10:00 PM<br>Pay by Phone Number: 64998","name":64998,"styleUrl":"#ParkingMeterStyler_KMLStyler_12","Point":{"coordinates":"-123.122123492298,49.2852087969433,0"}}];
+
+      $httpBackend
+        .when('GET', 'data.json')
+        .respond(200, json);
+        //{"data": [{"id":3576,"description":"<br>Meter Head Type: Twin<br>Time Limit: 2 Hr<br>Rate: $6.00<br>Credit Card Enabled: CREDIT_CARD<br>Time in Effect: METER IN EFFECT: 9:00 AM TO 10:00 PM<br>Pay by Phone Number: 64998","name":64998,"styleUrl":"#ParkingMeterStyler_KMLStyler_12","Point":{"coordinates":"-123.122123492298,49.2852087969433,0"}}],
+        //"status":200,"config":{"method":"GET","transformRequest":[null],"transformResponse":[null],"url":"data.json","responseType":"json","headers":{"Accept":"application/json, text/plain, */*"}},"statusText":"OK"});
+
+      $httpBackend.flush();
+
+      expect($scope.valid).toBe(true);
+      expect($scope.response).toBeDefined();
+      expect($scope.response[0].id).toEqual(3576);
+   });
 });
 
 
