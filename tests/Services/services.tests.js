@@ -152,6 +152,7 @@ describe('savedParkingService Unit Tests', function(){
  //SavedParkingServices tests end here
 });
 
+
 // ParkingCalculationsService tests
 describe('parkingCalculationService Unit Tests', function(){
   var parkingCalculationService;
@@ -170,7 +171,26 @@ describe('parkingCalculationService Unit Tests', function(){
   it('can get an instance of my factory', function() {
     expect(parkingCalculationService).toBeDefined();
   });
+
+  it('sortByCheapestParking test', function() {
+    // create some test parking data and sort
+    var json = [{"id":6,"name":64998,"latLng":{"lng":-123.122123492298,"lat":49.2852087969433},"timeLimit":"2 Hr","rate":6,"description":"<br>Meter Head Type: Twin<br>Time Limit: 2 Hr<br>Rate: $6.00<br>Credit Card Enabled: CREDIT_CARD<br>Time in Effect: METER IN EFFECT: 9:00 AM TO 10:00 PM<br>Pay by Phone Number: 64998"},
+                {"id":2,"name":65023,"latLng":{"lng":-123.12225035133,"lat":49.2852905098804},"timeLimit":"2 Hr","rate":2,"description":"<br>Meter Head Type: Single<br>Time Limit: 2 Hr<br>Rate: $6.00<br>Credit Card Enabled: CREDIT_CARD<br>Time in Effect: METER IN EFFECT: 9:00 AM TO 10:00 PM<br>Pay by Phone Number: 65023"},
+                {"id":4,"name":60234,"latLng":{"lng":-123.110822973931,"lat":49.2801316070927},"timeLimit":"2 Hr","rate":4,"description":"<br>Meter Head Type: Twin<br>Time Limit: 2 Hr<br>Rate: $2.00<br>Credit Card Enabled: CREDIT_CARD<br>Time in Effect: METER IN EFFECT: 9:00 AM TO 10:00 PM<br>Pay by Phone Number: 60234"}];
+    var sorted = parkingCalculationService.sortByCheapestParking(json, 5);
+
+    // check that data has been sorted from lowest to highest rate
+    expect(sorted[0].id).toEqual(2);
+    expect(sorted[1].id).toEqual(4);
+    expect(sorted[2].id).toEqual(6);
+
+    // check that specifying a limit reduces the results
+    sorted = parkingCalculationService.sortByCheapestParking(json, 2);
+    expect(sorted.length).toEqual(2);
+
+  });
 });
+
 
 // ParkingDataService tests
 describe('parkingDataService Unit Tests', function(){
