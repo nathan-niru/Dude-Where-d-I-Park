@@ -110,7 +110,45 @@ describe('savedParkingService Unit Tests', function(){
   it('can get an instance of my factory', function() {
     expect(savedParkingService).toBeDefined();
   });
-    
+
+  // create test parking object
+  var testParkingObject = {"id":7707,"name":50961,"latLng":{"lng":-123.115853678942,"lat":49.2499808201747},"timeLimit":"2 Hr","rate":1,"description":"<br>Meter Head Type: Twin<br>Time Limit: 2 Hr<br>Rate: $1.00<br>Credit Card Enabled: CREDIT_CARD<br>Time in Effect: METER IN EFFECT: 9:00 AM TO 10:00 PM<br>Pay by Phone Number: 50961"};
+
+  it('setSavedParking and getSavedParking test', function() {
+    // initially there should be no saved parking
+    expect(savedParkingService.getSavedParking()).not.toBeDefined;
+    // create a test parking object and save it
+    savedParkingService.setSavedParking(testParkingObject);
+    expect(savedParkingService.getSavedParking()).toEqual(testParkingObject);
+    // replace old saved parking with a new one
+    var testParkingObject2 = {"id":2178,"name":66755,"latLng":{"lng":-123.119189551142,"lat":49.2791281700076},"timeLimit":"2 Hr","rate":2.5,"description":"<br>Meter Head Type: Single<br>Time Limit: 2 Hr<br>Rate: $2.50<br>Credit Card Enabled: CREDIT_CARD<br>Time in Effect: METER IN EFFECT: 9:00 AM TO 10:00 PM<br>Pay by Phone Number: 66755"};
+    savedParkingService.setSavedParking(testParkingObject2);
+    expect(savedParkingService.getSavedParking()).toEqual(testParkingObject2);
+  });
+
+  it('clearSavedParking test', function() {
+    // save parking
+    savedParkingService.setSavedParking(testParkingObject);
+    expect(savedParkingService.getSavedParking()).toBeDefined();
+    // clear saved parking and check that saved parking is now undefined
+    savedParkingService.clearSavedParking();
+    expect(savedParkingService.getSavedParking()).not.toBeDefined();
+  });
+
+  it('setExpiryDateTime and getExpiryDateTime test', function() {
+    // no saved parking, expiry datetime should be undefined
+    expect(savedParkingService.getExpiryDateTime()).not.toBeDefined();
+    // save parking and then set expiry datetime
+    savedParkingService.setSavedParking(testParkingObject);
+    var date = new Date();
+    savedParkingService.setExpiryDateTime(date);
+    // check that expiry date has been set correctly
+    expect(new Date(savedParkingService.getExpiryDateTime())).toEqual(date)
+    // changing the saved parking should clear the expiry date
+    savedParkingService.clearSavedParking();
+    expect(savedParkingService.getExpiryDateTime()).not.toBeDefined();
+  });
+
 
     
 
@@ -162,17 +200,17 @@ describe('parkingDataService Unit Tests', function(){
 //
 // describe('notificationService Unit Tests', function(){
 //   var notificationService;
-
+//
 //   beforeEach(function() {
 //     module('starter.services');
-
+//
 //     inject(function (
 //       _$notificationService_
 //     ) {
 //       notificationService = _$notificationService_;
 //     });
 //   });
-
+//
 // //tests start here
 //   it('can get an instance of my factory', function() {
 //     expect(notificationService).toBeDefined();
