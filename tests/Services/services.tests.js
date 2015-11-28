@@ -113,6 +113,7 @@ describe('savedParkingService Unit Tests', function(){
 
   // create test parking object
   var testParkingObject = {"id":7707,"name":50961,"latLng":{"lng":-123.115853678942,"lat":49.2499808201747},"timeLimit":"2 Hr","rate":1,"description":"<br>Meter Head Type: Twin<br>Time Limit: 2 Hr<br>Rate: $1.00<br>Credit Card Enabled: CREDIT_CARD<br>Time in Effect: METER IN EFFECT: 9:00 AM TO 10:00 PM<br>Pay by Phone Number: 50961"};
+  var testParkingObject2 = {"id":2178,"name":66755,"latLng":{"lng":-123.119189551142,"lat":49.2791281700076},"timeLimit":"2 Hr","rate":2.5,"description":"<br>Meter Head Type: Single<br>Time Limit: 2 Hr<br>Rate: $2.50<br>Credit Card Enabled: CREDIT_CARD<br>Time in Effect: METER IN EFFECT: 9:00 AM TO 10:00 PM<br>Pay by Phone Number: 66755"};
 
   it('setSavedParking and getSavedParking test', function() {
     // initially there should be no saved parking
@@ -121,7 +122,6 @@ describe('savedParkingService Unit Tests', function(){
     savedParkingService.setSavedParking(testParkingObject);
     expect(savedParkingService.getSavedParking()).toEqual(testParkingObject);
     // replace old saved parking with a new one
-    var testParkingObject2 = {"id":2178,"name":66755,"latLng":{"lng":-123.119189551142,"lat":49.2791281700076},"timeLimit":"2 Hr","rate":2.5,"description":"<br>Meter Head Type: Single<br>Time Limit: 2 Hr<br>Rate: $2.50<br>Credit Card Enabled: CREDIT_CARD<br>Time in Effect: METER IN EFFECT: 9:00 AM TO 10:00 PM<br>Pay by Phone Number: 66755"};
     savedParkingService.setSavedParking(testParkingObject2);
     expect(savedParkingService.getSavedParking()).toEqual(testParkingObject2);
   });
@@ -144,7 +144,17 @@ describe('savedParkingService Unit Tests', function(){
     savedParkingService.setExpiryDateTime(date);
     // check that expiry date has been set correctly
     expect(new Date(savedParkingService.getExpiryDateTime())).toEqual(date)
+  });
+
+  it('clearing ExpiryDateTime', function() {
+    // set saved parking and expiry date
+    savedParkingService.setSavedParking(testParkingObject);
+    var date = new Date();
+    savedParkingService.setExpiryDateTime(date);
     // changing the saved parking should clear the expiry date
+    savedParkingService.setSavedParking(testParkingObject2);
+    expect(savedParkingService.getExpiryDateTime()).not.toBeDefined();
+    // clearing the saved parking should also clear the expiry date
     savedParkingService.clearSavedParking();
     expect(savedParkingService.getExpiryDateTime()).not.toBeDefined();
   });
@@ -172,22 +182,29 @@ describe('parkingCalculationService Unit Tests', function(){
     expect(parkingCalculationService).toBeDefined();
   });
 
-  it('sortByCheapestParking test', function() {
-    // create some test parking data and sort
-    var json = [{"id":6,"name":64998,"latLng":{"lng":-123.122123492298,"lat":49.2852087969433},"timeLimit":"2 Hr","rate":6,"description":"<br>Meter Head Type: Twin<br>Time Limit: 2 Hr<br>Rate: $6.00<br>Credit Card Enabled: CREDIT_CARD<br>Time in Effect: METER IN EFFECT: 9:00 AM TO 10:00 PM<br>Pay by Phone Number: 64998"},
+    // create some test parking data
+    var data = [{"id":6,"name":64998,"latLng":{"lng":-123.122123492298,"lat":49.2852087969433},"timeLimit":"2 Hr","rate":6,"description":"<br>Meter Head Type: Twin<br>Time Limit: 2 Hr<br>Rate: $6.00<br>Credit Card Enabled: CREDIT_CARD<br>Time in Effect: METER IN EFFECT: 9:00 AM TO 10:00 PM<br>Pay by Phone Number: 64998"},
                 {"id":2,"name":65023,"latLng":{"lng":-123.12225035133,"lat":49.2852905098804},"timeLimit":"2 Hr","rate":2,"description":"<br>Meter Head Type: Single<br>Time Limit: 2 Hr<br>Rate: $6.00<br>Credit Card Enabled: CREDIT_CARD<br>Time in Effect: METER IN EFFECT: 9:00 AM TO 10:00 PM<br>Pay by Phone Number: 65023"},
                 {"id":4,"name":60234,"latLng":{"lng":-123.110822973931,"lat":49.2801316070927},"timeLimit":"2 Hr","rate":4,"description":"<br>Meter Head Type: Twin<br>Time Limit: 2 Hr<br>Rate: $2.00<br>Credit Card Enabled: CREDIT_CARD<br>Time in Effect: METER IN EFFECT: 9:00 AM TO 10:00 PM<br>Pay by Phone Number: 60234"}];
-    var sorted = parkingCalculationService.sortByCheapestParking(json, 5);
+
+  it('sortByCheapestParking test', function() {
+    // sort the test parking data
+    var sorted = parkingCalculationService.sortByCheapestParking(data, 5);
 
     // check that data has been sorted from lowest to highest rate
     expect(sorted[0].id).toEqual(2);
     expect(sorted[1].id).toEqual(4);
     expect(sorted[2].id).toEqual(6);
+  });
 
+  it('sortByCheapestParking limit test', function() {
     // check that specifying a limit reduces the results
-    sorted = parkingCalculationService.sortByCheapestParking(json, 2);
+    var sorted = parkingCalculationService.sortByCheapestParking(data, 2);
     expect(sorted.length).toEqual(2);
+  });
 
+  it('getParkingInMapBounds test (coverage)', function() {
+    parkingCalculationService.getParkingInMapBounds(null, data);
   });
 });
 
