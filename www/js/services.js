@@ -40,6 +40,20 @@ angular.module('starter.services', [])
         $localStorage.set('searchZoom', parsedZoomInt);
       }}
     },
+    getVibrate: function() {
+      if($localStorage.get('vibrate') === "true") {
+        return true;
+      }
+
+      return false;
+    },
+    setVibrate: function(vibrate) {
+      if (vibrate === true) {
+        $localStorage.set('vibrate', true);
+      } else {
+        $localStorage.set('vibrate', false);
+      }
+    },
     getNotificationReminderMinutes: function() {
       if (!$localStorage.get('notificationReminderMinutes') ||
         !parseInt($localStorage.get('notificationReminderMinutes'))) {
@@ -215,6 +229,9 @@ angular.module('starter.services', [])
         text: 'Your parking is about to expire!',
         at: notificationDate
       }).then(function () {
+        if ($appSettings.getVibrate() === true) {
+          navigator.vibrate(1500);
+        }
         // TODO: Maybe do something here to inform the user that a notification
         // has been scheduled
       });

@@ -506,15 +506,11 @@ angular.module('starter.controllers', [])
   $scope.notificationReminderMinutes = $appSettings.getNotificationReminderMinutes();
   $scope.updateNotificationReminderTime();
 
-  $scope.vibrate = $localStorage.get('vibrate');
-  if ($scope.vibrate == 'false') {
-    $scope.vibrate = false;
-  } else {
-    $scope.vibrate = true;
-  }
   $scope.updateVibrate = function() {
-    $localStorage.set('vibrate', $scope.vibrate);
+    $appSettings.setVibrate($scope.vibrate);
   };
+
+  $scope.vibrate = $appSettings.getVibrate();
 
   $scope.sound = $localStorage.get('sound');
   if ($scope.sound == 'false') {
