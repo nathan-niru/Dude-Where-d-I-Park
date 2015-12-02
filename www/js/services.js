@@ -41,11 +41,11 @@ angular.module('starter.services', [])
       }}
     },
     getVibrate: function() {
-      if($localStorage.get('vibrate') === "true") {
-        return true;
+      if($localStorage.get('vibrate') === "false") {
+        return false;
       }
 
-      return false;
+      return true;
     },
     setVibrate: function(vibrate) {
       if (vibrate === true) {
